@@ -10,7 +10,7 @@ import SwiftUI
 
 struct Ring: Shape {
   var delayPoint = 0.5
-  private var startArcAngle: Double
+  var startArcAngle: Double = 360.0
   
   var fillPoint: Double {
     willSet {
