@@ -9,16 +9,24 @@
 import SwiftUI
 
 struct MainView: View {
+  let viewModel = MainViewModel()
+  
   @State private var fillPoint = 1.0
+  @State private var animationDuration = 5.0
   
   var body: some View {
-    Group {
-      Ring(fillPoint: fillPoint).stroke(Color.red, lineWidth: 15)
-        .frame(width: 200, height: 200)
-        .onAppear() {
-          withAnimation() {
-            self.fillPoint = 0.0
-          }
+    TabView {
+      Group {
+        Ring(fillPoint: fillPoint).stroke(Color.red, lineWidth: 15)
+          .frame(width: 200, height: 200)
+          .onAppear() {
+            withAnimation(.easeIn(duration: self.animationDuration)) {
+              self.fillPoint = 0.0
+            }
+        }
+      }.tabItem {
+        Text("Timer")
+        Image(systemName: "clock")
       }
     }
   }
