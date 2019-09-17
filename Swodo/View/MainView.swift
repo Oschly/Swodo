@@ -1,33 +1,39 @@
 //
-//  MainView.swift
+//  ContentView.swift
 //  Swodo
 //
-//  Created by Oschły on 17/09/2019.
+//  Created by Oskar on 17/09/2019.
 //  Copyright © 2019 Oschły. All rights reserved.
 //
 
 import SwiftUI
 
 struct MainView: View {
-  let viewModel = MainViewModel()
-  
   @State private var fillPoint = 1.0
   @State private var animationDuration = 5.0
   
   var body: some View {
-    TabView {
-      Group {
-        Ring(fillPoint: fillPoint).stroke(Color.red, lineWidth: 15)
-          .frame(width: 200, height: 200)
-          .onAppear() {
-            withAnimation(.easeIn(duration: self.animationDuration)) {
-              self.fillPoint = 0.0
-            }
+    VStack {
+      Ring(fillPoint: fillPoint).stroke(Color.red, lineWidth: 15.0)
+        .frame(width: 200, height: 200)
+        .padding(40)
+      HStack {
+        Button(action: {
+          withAnimation {
+              self.fillPoint = 0
+          }
+        }) {
+          Text("Start")
         }
-      }.tabItem {
-        Text("Timer")
-        Image(systemName: "clock")
+        Button(action: {
+          withAnimation { 
+            self.fillPoint = 1
+          }
+        }) {
+          Text("Reset")
+        }
       }
+      
     }
   }
 }
