@@ -9,15 +9,10 @@
 import SwiftUI
 
 struct MainView: View {
-  @State private var fillPoint = 1.0
-  @State private var animationDuration = 60.0
-  @State private var  stopAnimation = true
-  @State private var countdownTimer: Timer?
-  
-  private var fillPointMax: Double = 60
+  @ObservedObject private var viewModel = MainViewModel()
   
   private var ring: Ring {
-    let ring = Ring(fillPoint: self.fillPoint)
+    let ring = Ring(fillPoint: self.viewModel.fillPoint)
     return ring
   }
   
@@ -27,28 +22,35 @@ struct MainView: View {
       ring.stroke(Color.red, lineWidth: 15.0)
         .frame(width: 200, height: 200)
         .padding(40)
-        .animation(self.stopAnimation ? nil : .easeIn(duration: 0.1))
+        .animation(self.viewModel.stopAnimation ? nil : .easeIn(duration: 0.1))
       HStack {
         Button(action: {
-          guard self.stopAnimation == true else { return }
-          self.stopAnimation = false
-          self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
-            guard self.animationDuration > 0 else {
-              self.countdownTimer?.invalidate()
+          guard self.viewModel.stopAnimation == true else { return }
+          self.viewModel.stopAnimation = false
+          self.viewModel.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
+            guard self.viewModel.animationDuration > 0 else {
+              self.viewModel.countdownTimer?.invalidate()
               return
             }
-            self.fillPoint = self.animationDuration/self.fillPointMax
-            self.animationDuration -= 0.1
-            print(self.fillPoint)
+            self.viewModel.fillPoint = self.viewModel.animationDuration/Double(self.viewModel.fillPointMax * 5)
+            self.viewModel.animationDuration -= 0.1
+            print(self.viewModel.fillPoint)
           })
         }) {
           Text("Start")
         }
         Button(action: {
-          self.countdownTimer?.invalidate()
-          self.stopAnimation = true
+          self.viewModel.countdownTimer?.invalidate()
+          self.viewModel.stopAnimation = true
         }) {
           Text("Stop")
+        }
+      }
+      HStack {
+        Picker(selection: $viewModel.fillPointMax, label: Text("")) {
+          ForEach(Range(1...24), id: \.self) { index in
+            Text("\(index * 5)").id(index)
+          }
         }
       }
     }
