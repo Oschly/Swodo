@@ -46,10 +46,28 @@ struct MainView: View {
           Text("Stop")
         }
       }
-      HStack {
-        Picker(selection: $viewModel.fillPointMax, label: Text("")) {
-          ForEach(Range(1...24), id: \.self) { index in
-            Text("\(index * 5)").id(index)
+      GeometryReader { geometry in
+        HStack {
+          VStack {
+            Picker(selection: self.$viewModel.fillPointMax, label: Text("")) {
+              ForEach(Range(1...24), id: \.self) { index in
+                Text("\(index * 5)").id(index)
+              }
+            }.frame(maxWidth: geometry.size.width / 2)
+              .clipped()
+              .labelsHidden()
+            Text("Session's duration")
+          }
+          VStack {
+            Picker(selection: self.$viewModel.numberOfSessions,
+                   label: Text("Number of sessions")) {
+                    ForEach(Range(1...10), id: \.self) { index in
+                      Text("\(index)").id(index)
+                    }
+            }.frame(maxWidth: geometry.size.width / 2)
+              .clipped()
+              .labelsHidden()
+            Text("Number of sessions")
           }
         }
       }
