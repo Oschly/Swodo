@@ -23,6 +23,33 @@ struct MainView: View {
         .frame(width: 200, height: 200)
         .padding(40)
         .animation(self.viewModel.stopAnimation ? nil : .easeIn(duration: 0.1))
+      GeometryReader { geometry in
+        HStack {
+          VStack {
+            Picker(selection: self.$viewModel.fillPointMax, label: Text("")) {
+              ForEach(Range(1...24), id: \.self) { index in
+                Text("\(index * 5) Minutes").id(index)
+              }
+            }.frame(maxWidth: geometry.size.width / 2,
+                    maxHeight: geometry.size.height / 3)
+              .clipped()
+              .labelsHidden()
+            Text("Session's duration")
+          }
+          VStack {
+            Picker(selection: self.$viewModel.numberOfSessions,
+                   label: Text("Number of sessions")) {
+                    ForEach(Range(1...10), id: \.self) { index in
+                      Text("\(index)").id(index)
+                    }
+            }.frame(maxWidth: geometry.size.width / 2,
+                    maxHeight: geometry.size.height / 3)
+              .clipped()
+              .labelsHidden()
+            Text("Number of sessions")
+          }
+        }
+      }
       HStack {
         Button(action: {
           guard self.viewModel.stopAnimation == true else { return }
@@ -44,31 +71,6 @@ struct MainView: View {
           self.viewModel.stopAnimation = true
         }) {
           Text("Stop")
-        }
-      }
-      GeometryReader { geometry in
-        HStack {
-          VStack {
-            Picker(selection: self.$viewModel.fillPointMax, label: Text("")) {
-              ForEach(Range(1...24), id: \.self) { index in
-                Text("\(index * 5)").id(index)
-              }
-            }.frame(maxWidth: geometry.size.width / 2)
-              .clipped()
-              .labelsHidden()
-            Text("Session's duration")
-          }
-          VStack {
-            Picker(selection: self.$viewModel.numberOfSessions,
-                   label: Text("Number of sessions")) {
-                    ForEach(Range(1...10), id: \.self) { index in
-                      Text("\(index)").id(index)
-                    }
-            }.frame(maxWidth: geometry.size.width / 2)
-              .clipped()
-              .labelsHidden()
-            Text("Number of sessions")
-          }
         }
       }
     }
