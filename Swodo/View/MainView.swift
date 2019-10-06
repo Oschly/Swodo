@@ -31,7 +31,7 @@ struct MainView: View {
                 Text("\(index * 5) Minutes").id(index)
               }
             }.frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: geometry.size.height / 3)
+                    maxHeight: 74)
               .clipped()
               .labelsHidden()
             Text("Session's duration")
@@ -43,7 +43,7 @@ struct MainView: View {
                       Text("\(index)").id(index)
                     }
             }.frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: geometry.size.height / 3)
+                    maxHeight: 74)
               .clipped()
               .labelsHidden()
             Text("Number of sessions")
