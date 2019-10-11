@@ -12,7 +12,7 @@ struct MainView: View {
   @ObservedObject private var viewModel = MainViewModel()
   
   private var ring: Ring {
-    let ring = Ring(fillPoint: self.viewModel.fillPoint)
+    let ring = Ring(fillPoint: self.viewModel.progressValue)
     return ring
   }
   
@@ -26,7 +26,7 @@ struct MainView: View {
       GeometryReader { geometry in
         HStack {
           VStack {
-            Picker(selection: self.$viewModel.fillPointMax, label: Text("")) {
+            Picker(selection: self.$viewModel.progressValue, label: Text("")) {
               ForEach(Range(1...24), id: \.self) { index in
                 Text("\(index * 5) Minutes").id(index)
               }
@@ -50,19 +50,20 @@ struct MainView: View {
           }
         }
       }
+      
       HStack {
         Button(action: {
           guard self.viewModel.stopAnimation == true else { return }
-          self.viewModel.stopAnimation = false
-          self.viewModel.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
-            guard self.viewModel.animationDuration > 0 else {
-              self.viewModel.countdownTimer?.invalidate()
-              return
-            }
-            self.viewModel.fillPoint = self.viewModel.animationDuration/Double(self.viewModel.fillPointMax * 5)
-            self.viewModel.animationDuration -= 0.1
-            print(self.viewModel.fillPoint)
-          })
+            self.viewModel.stopAnimation = false
+            self.viewModel.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
+              guard self.viewModel.animationDuration > 0 else {
+                self.viewModel.countdownTimer?.invalidate()
+                return
+              }
+              self.viewModel.progressValue = self.viewModel.animationDuration/Double(self.viewModel.workTime * 5)
+              self.viewModel.animationDuration -= 0.1
+            })
+            
         }) {
           Text("Start")
         }
