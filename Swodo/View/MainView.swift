@@ -11,65 +11,18 @@ import SwiftUI
 struct MainView: View {
   @ObservedObject private var viewModel = MainViewModel()
   
-  private var ring: Ring {
-    let ring = Ring(fillPoint: self.viewModel.progressValue)
-    return ring
-  }
-  
   // https://stackoverflow.com/a/58048635/8140676
   var body: some View {
     VStack {
-      ring.stroke(Color.red, lineWidth: 15.0)
-        .frame(width: 200, height: 200)
-        .padding(40)
-        .animation(self.viewModel.stopAnimation ? nil : .easeIn(duration: 0.1))
-      GeometryReader { geometry in
-        HStack {
-          VStack {
-            Picker(selection: self.$viewModel.progressValue, label: Text("")) {
-              ForEach(Range(1...24), id: \.self) { index in
-                Text("\(index * 5) Minutes").id(index)
-              }
-            }.frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: 74)
-              .clipped()
-              .labelsHidden()
-            Text("Session's duration")
-          }
-          VStack {
-            Picker(selection: self.$viewModel.numberOfSessions,
-                   label: Text("Number of sessions")) {
-                    ForEach(Range(1...10), id: \.self) { index in
-                      Text("\(index)").id(index)
-                    }
-            }.frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: 74)
-              .clipped()
-              .labelsHidden()
-            Text("Number of sessions")
-          }
-        }
-      }
-      
+      self.viewModel.returnProperView()
       HStack {
         Button(action: {
-          guard self.viewModel.stopAnimation == true else { return }
-            self.viewModel.stopAnimation = false
-            self.viewModel.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
-              guard self.viewModel.animationDuration > 0 else {
-                self.viewModel.countdownTimer?.invalidate()
-                return
-              }
-              self.viewModel.progressValue = self.viewModel.animationDuration/Double(self.viewModel.workTime * 5)
-              self.viewModel.animationDuration -= 0.1
-            })
-            
+          self.viewModel.startAnimation()
         }) {
           Text("Start")
         }
         Button(action: {
-          self.viewModel.countdownTimer?.invalidate()
-          self.viewModel.stopAnimation = true
+          self.viewModel.stopAnimation()
         }) {
           Text("Stop")
         }
