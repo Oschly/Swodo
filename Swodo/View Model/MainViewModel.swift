@@ -39,47 +39,19 @@ final class MainViewModel: ObservableObject {
   @Published var numberOfSessions = 1 { didSet { didChange.send() } }
   @Published var state: TimerState = .notStarted { didSet { didChange.send() } }
   
+  private var newRing = AnimatedRing()
+  
   // MARK: - Views
   var ring: some View {
-    return Ring(fillPoint: self.progressValue)
-      .stroke(Color.red, lineWidth: 15.0)
-      .frame(width: 200, height: 200)
-      .padding(40)
-      .animation(self.shouldAnimate ? nil : .easeIn(duration: 0.1))
+    AnimatedRing(progressValue: progressValue, shouldAnimate: shouldAnimate)
   }
   
-    var pickers: some View {
-      GeometryReader { geometry in
-        HStack {
-          VStack {
-            Picker(selection: self.$progressValue, label: Text("")) {
-              ForEach(Range(1...24), id: \.self) { index in
-                Text("\(index * 5) Minutes").id(index)
-              }
-            }.frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: 74)
-              .clipped()
-              .labelsHidden()
-            Text("Session's duration")
-          }
-          VStack {
-            Picker(selection: self.$numberOfSessions,
-                   label: Text("Number of sessions")) {
-                    ForEach(Range(1...10), id: \.self) { index in
-                      Text("\(index)").id(index)
-                    }
-            }.frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: 74)
-              .clipped()
-              .labelsHidden()
-            Text("Number of sessions")
-          }
-        }
-      }
+  var pickers: some View {
+    Pickers(duration: progressValue, sessions: numberOfSessions)
   }
   
   func startAnimation() {
-    guard shouldAnimate == true else { return }
+    guard shouldAnimate else { return }
     shouldAnimate = false
     countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
       guard self.animationDuration > 0 else {
@@ -97,19 +69,38 @@ final class MainViewModel: ObservableObject {
   }
   
   func returnProperView() -> AnyView {
-      switch state {
-      case .notStarted:
-        return AnyView(Circle())
-      case .paused:
-        return AnyView(pickers)
-      case .workTime:
-        return AnyView(ring)
-      case .endOfWork:
-        return AnyView(pickers)
-      case .breakTime:
-        return AnyView(ring)
-      case .endOfBreak:
-        return AnyView(ring)
+    switch state {
+    case .notStarted:
+      return AnyView(Pickers(duration: self.animationDuration, sessions: self.numberOfSessions))
+    case .paused:
+      return AnyView(pickers)
+    case .workTime:
+      defer {
+        startAnimation()
       }
+      
+      return AnyView(ring)
+    case .endOfWork:
+      return AnyView(pickers)
+    case .breakTime:
+      return AnyView(ring)
+    case .endOfBreak:
+      return AnyView(ring)
+    }
+  }
+}
+
+struct AnimatedRing: View {
+  
+  @State var progressValue: Double = 1.0
+  @State var shouldAnimate: Bool = true
+  
+  #warning("Add Feature to change color of Ring")
+  var body: some View {
+    Ring(fillPoint: 0.0)
+      .stroke(Color.red, lineWidth: 15.0)
+      .frame(width: 200, height: 200)
+      .padding(40)
+      .animation(shouldAnimate ? nil : .easeIn(duration: 0.1))
   }
 }
