@@ -7,10 +7,10 @@
 //
 
 import SwiftUI
-import Combine
 
 enum TimerState {
   case notStarted
+  case stopped
   case paused
   case workTime
   case endOfWork
@@ -19,32 +19,44 @@ enum TimerState {
 }
 
 final class MainViewModel: ObservableObject {
-  var didChange = PassthroughSubject<Void, Never>()
   
   // Ring's animation data
-  @Published var countdownTimer: Timer? { didSet { didChange.send() } }
-  @Published var progressValue = 1.0 { didSet { didChange.send() } }
-  @Published var animationDuration = 5.0 { didSet { didChange.send() } }
-  @Published var isAnimationStopped = true { didSet { didChange.send() } }
+  @Published var progressValue = 1.0
+  @Published var countdownTimer: Timer?
+  @Published var animationDuration = 5.0
+  @Published var isAnimationStopped = true
   @Published var workTime = 1 {
     didSet {
       self.animationDuration = Double(workTime * 5)
-      didChange.send()
     }
   }
   
+  
   // Manage sessions (work-break time)
-  @Published var numberOfSessions = 1 { didSet { didChange.send() } }
-  @Published var state: TimerState = .notStarted { didSet { didChange.send() } }
+  @Published var numberOfSessions = 1
+  @Published var state: TimerState = .notStarted
+  
   
   // https://stackoverflow.com/a/58048635/8140676
-  func startAnimation() {
+  func startWorkCycle() {
     guard isAnimationStopped else { return }
+    state = .workTime
     isAnimationStopped = false
-    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: {  _ in
+    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self]  _ in
+      guard let self = self else { return }
       guard self.animationDuration > 0 else {
         self.countdownTimer?.invalidate()
-        self.state = .endOfWork
+        self.countdownTimer = nil
+        self.isAnimationStopped = true
+        self.animationDuration = 1.0
+        self.numberOfSessions -= 1
+        
+        if self.numberOfSessions != 0 {
+          self.animationDuration = 5
+          self.state = .stopped
+          self.startBreakCycle()
+        }
+        
         return
       }
       self.progressValue = self.animationDuration/Double(self.workTime * 5)
@@ -52,10 +64,36 @@ final class MainViewModel: ObservableObject {
     })
   }
   
-    func stopAnimation() {
-      countdownTimer?.invalidate()
-      isAnimationStopped = true
+  internal func startBreakCycle() {
+    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: {  _ in
+      guard self.animationDuration < 1 else {
+        self.countdownTimer?.invalidate()
+        self.countdownTimer = nil
+
+
+        return
+      }
+      self.progressValue = self.animationDuration/Double(self.workTime * 5)
+      self.animationDuration += 0.1
+    })
   }
   
-
+  func stopWorkSession() {
+    countdownTimer?.invalidate()
+    countdownTimer = nil
+    state = .stopped
+    isAnimationStopped = true
+    progressValue = 1.0
+    
+    // It somehow fixes the bug with invalid ring's value resetting.
+    animationDuration = 5.0
+  }
+  
+  func pauseAnimation() {
+    countdownTimer?.invalidate()
+    countdownTimer = nil
+    isAnimationStopped = true
+  }
+  
+  
 }

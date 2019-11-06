@@ -16,8 +16,8 @@ struct MainView: View {
       HStack {
         VStack {
           Picker(selection: self.$viewModel.workTime, label: Text("")) {
-            ForEach(Range(1...24), id: \.self) { index in
-              Text("\(index * 5) Minutes").id(index)
+            ForEach(1...24, id: \.self) { index in
+              Text("\(index * 5) Minutes")
             }
           }.frame(maxWidth: geometry.size.width / 2,
                   maxHeight: 74)
@@ -28,8 +28,8 @@ struct MainView: View {
         VStack {
           Picker(selection: self.$viewModel.numberOfSessions,
                  label: Text("Number of sessions")) {
-                  ForEach(Range(1...10), id: \.self) { index in
-                    Text("\(index)").id(index)
+                  ForEach(1...10, id: \.self) { index in
+                    Text("\(index)")
                   }
           }.frame(maxWidth: geometry.size.width / 2,
                   maxHeight: 74)
@@ -49,19 +49,20 @@ struct MainView: View {
       .animation(viewModel.isAnimationStopped ? nil : .easeIn(duration: 0.1))
   }
   
+  
+  // MARK: - Body
   var body: some View {
     VStack {
       returnProperView()
       HStack {
-        Button(action: {
-          self.viewModel.state = .workTime
-        }) {
-          Text("Start")
+        Button("Start") {
+          self.viewModel.startWorkCycle()
         }
-        Button(action: {
-          self.viewModel.state = .paused
-        }) {
-          Text("Stop")
+        Button("Stop") {
+          self.viewModel.stopWorkSession()
+        }
+        Button("Pause") {
+          self.viewModel.pauseAnimation()
         }
       }
     }
@@ -71,15 +72,11 @@ struct MainView: View {
     switch viewModel.state {
     case .notStarted:
       return AnyView(pickers)
-    case .paused:
-      defer {
-        viewModel.stopAnimation()
-      }
+    case .stopped:
       return AnyView(pickers)
+    case .paused:
+      return AnyView(ring)
     case .workTime:
-      defer {
-        viewModel.startAnimation()
-      }
       return AnyView(ring)
     case .endOfWork:
       return AnyView(pickers)
@@ -92,6 +89,7 @@ struct MainView: View {
   
   
 }
+
 struct MainView_Previews: PreviewProvider {
   static var previews: some View {
     MainView()
