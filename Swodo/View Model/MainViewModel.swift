@@ -6,7 +6,7 @@
 //  Copyright © 2019 Oschły. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
 enum TimerState {
   case notStarted
@@ -52,9 +52,12 @@ final class MainViewModel: ObservableObject {
         self.numberOfSessions -= 1
         
         if self.numberOfSessions != 0 {
-          self.animationDuration = 5
-          self.state = .stopped
+          self.animationDuration = 0
           self.startBreakCycle()
+        } else {
+          self.state = .stopped
+          self.animationDuration = Double(self.workTime * 5)
+          self.progressValue = 1.0
         }
         
         return
@@ -65,17 +68,27 @@ final class MainViewModel: ObservableObject {
   }
   
   internal func startBreakCycle() {
+    guard isAnimationStopped else { return }
+    state = .breakTime
+    isAnimationStopped = false
     countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: {  _ in
-      guard self.animationDuration < 1 else {
+      guard self.animationDuration < Double(self.workTime * 5) else {
         self.countdownTimer?.invalidate()
         self.countdownTimer = nil
-
+        self.isAnimationStopped = true
+        self.startWorkCycle()
 
         return
       }
       self.progressValue = self.animationDuration/Double(self.workTime * 5)
       self.animationDuration += 0.1
-    })
+      
+      #warning("Bigger amount of time makes animation bugged with that if-condition")
+      if self.progressValue > 0.99 {
+        self.progressValue = 1.0
+      }
+      })
+    
   }
   
   func stopWorkSession() {
