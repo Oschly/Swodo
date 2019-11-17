@@ -30,62 +30,52 @@ final class MainViewModel: ObservableObject {
     }
   }
   
-  var countdownTimer: DispatchSourceTimer?
-  
+  var countdownTimer: Timer?
   
   // Manage sessions (work-break time)
   @Published var numberOfSessions = 1
   @Published var state: TimerState = .notStarted
   
-  #warning("move @Published objects modifications to main thread")
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
-    if let countdownTimer = countdownTimer {
-      countdownTimer.activate()
-    } else {
-      guard isAnimationStopped else { return }
-      state = .workTime
-      isAnimationStopped = false
-      
-      countdownTimer = DispatchSource.makeTimerSource()
-      countdownTimer?.schedule(wallDeadline: .now(), repeating: 0.1)
-      countdownTimer?.setEventHandler { [weak self] in
-        guard let self = self else { return }
-        guard self.animationDuration > 0 else {
-          self.countdownTimer?.cancel()
-          self.countdownTimer = nil
-          self.isAnimationStopped = true
-          self.animationDuration = 1.0
-          self.numberOfSessions -= 1
-          
-          if self.numberOfSessions != 0 {
-            self.animationDuration = 0
-            self.startBreakCycle()
-          } else {
-            self.state = .stopped
-            self.animationDuration = Double(self.workTime * 5)
-            self.progressValue = 1.0
-          }
-          
-          return
+    guard isAnimationStopped else { return }
+    state = .workTime
+    isAnimationStopped = false
+    
+    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
+      guard let self = self else { return }
+      guard self.animationDuration > 0 else {
+        self.countdownTimer?.invalidate()
+        self.countdownTimer = nil
+        self.isAnimationStopped = true
+        self.animationDuration = 1.0
+        self.numberOfSessions -= 1
+        
+        if self.numberOfSessions != 0 {
+          self.animationDuration = 0
+          self.startBreakCycle()
+        } else {
+          self.state = .stopped
+          self.animationDuration = Double(self.workTime * 5)
+          self.progressValue = 1.0
         }
-        self.progressValue = self.animationDuration/Double(self.workTime * 5)
-        self.animationDuration -= 0.1
+        return
+        
       }
-      countdownTimer?.activate()
-    }
+      self.progressValue = self.animationDuration/Double(self.workTime * 5)
+      self.animationDuration -= 0.1
+    })
+    self.countdownTimer?.fire()
   }
   
   internal func startBreakCycle() {
     guard isAnimationStopped else { return }
     state = .breakTime
     isAnimationStopped = false
-    countdownTimer = DispatchSource.makeTimerSource()
-    countdownTimer!.schedule(wallDeadline: .now(), repeating: 0.1)
-    countdownTimer!.setEventHandler { [weak self] in
+    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
       guard let self = self else { return }
       guard self.animationDuration < Double(self.workTime * 5) else {
-        self.countdownTimer?.cancel()
+        self.countdownTimer?.invalidate()
         self.countdownTimer = nil
         self.isAnimationStopped = true
         self.startWorkCycle()
@@ -94,31 +84,30 @@ final class MainViewModel: ObservableObject {
       }
       self.progressValue = self.animationDuration/Double(self.workTime * 5)
       self.animationDuration += 0.1
-      
       #warning("Bigger amount of time makes animation bugged with that if-condition")
       if self.progressValue > 0.99 {
         self.progressValue = 1.0
       }
-    }
-    countdownTimer?.activate()
+    })
+    countdownTimer?.fire()
     
   }
   
   func stopWorkSession() {
-    countdownTimer?.cancel()
+    countdownTimer?.invalidate()
     countdownTimer = nil
     state = .stopped
     isAnimationStopped = true
     progressValue = 1.0
     
     // It somehow fixes the bug with invalid ring's value resetting.
-    animationDuration = 5.0
+    animationDuration = Double(workTime * 5)
   }
   
   func pauseAnimation() {
-    #warning("Doesn't work, in some cases just crashes program.")
-    countdownTimer?.suspend()
-    isAnimationStopped = true
+    countdownTimer?.invalidate()
+    countdownTimer = nil
+    self.isAnimationStopped = true
   }
   
   
