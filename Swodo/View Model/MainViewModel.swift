@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum TimerState {
+enum TimerState: String {
   case notStarted
   case stopped
   case paused
@@ -112,5 +112,15 @@ final class MainViewModel: ObservableObject {
   
   func saveSession(aNotification: Notification) {
     let userDefaults = UserDefaults.standard
+    
+    // Consider reducing saving data to make it less laggy on exit.
+    userDefaults.set(isAnimationStopped, forKey: "isAnimationStopped")
+    userDefaults.set(animationDuration, forKey: "animationDuration")
+    userDefaults.set(numberOfSessions, forKey: "numberOfSessions")
+    userDefaults.set(progressValue, forKey: "progressValue")
+    userDefaults.set(workTime, forKey: "workTime")
+    userDefaults.set(state.rawValue, forKey: "TimerState")
+    
+    print("saved!")
   }
 }
