@@ -110,5 +110,7 @@ final class MainViewModel: ObservableObject {
     self.isAnimationStopped = true
   }
   
-  
+  func saveSession(aNotification: Notification) {
+    let userDefaults = UserDefaults.standard
+  }
 }
