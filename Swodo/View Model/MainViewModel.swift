@@ -8,16 +8,6 @@
 
 import Foundation
 
-enum TimerState: String {
-  case notStarted
-  case stopped
-  case paused
-  case workTime
-  case endOfWork
-  case breakTime
-  case endOfBreak
-}
-
 final class MainViewModel: ObservableObject {
   
   // Ring's animation data
@@ -113,14 +103,43 @@ final class MainViewModel: ObservableObject {
   func saveSession(aNotification: Notification) {
     let userDefaults = UserDefaults.standard
     
-    // Consider reducing saving data to make it less laggy on exit.
-    userDefaults.set(isAnimationStopped, forKey: "isAnimationStopped")
-    userDefaults.set(animationDuration, forKey: "animationDuration")
-    userDefaults.set(numberOfSessions, forKey: "numberOfSessions")
-    userDefaults.set(progressValue, forKey: "progressValue")
-    userDefaults.set(workTime, forKey: "workTime")
-    userDefaults.set(state.rawValue, forKey: "TimerState")
+    userDefaults.set(state.rawValue, forKey: "timerState")
     
-    print("saved!")
+    // Prevent changing values at saving time.
+    state = .paused
+    
+    userDefaults.set(numberOfSessions, forKey: .numberOfSessionsKey)
+    userDefaults.set(workTime, forKey: .workTimeKey)
+    userDefaults.set(Date(), forKey: .dateKey)
+  }
+  
+  func readUnfinishedSession(aNotification: Notification) {
+    let userDefaults = UserDefaults.standard
+    userDefaults.register(defaults: [.workTimeKey : 5])
+    
+    let exitDate = userDefaults.value(forKey: .dateKey) as! Date
+    let actualDate = Date()
+    var differenceBetweenDates = exitDate.distance(to: actualDate)
+    
+    workTime = userDefaults.integer(forKey: .workTimeKey)
+    numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
+    
+    while differenceBetweenDates > Double(workTime * 5) {
+      numberOfSessions -= 1
+      differenceBetweenDates -= Double(workTime * 5)
+    }
+    
+    animationDuration = differenceBetweenDates
+    progressValue = animationDuration / Double(workTime * 5)
+    state = TimerState(rawValue: userDefaults.string(forKey: .stateString) ?? "notStarted")!
+    
+    switch state {
+    case .workTime, .breakTime:
+      isAnimationStopped = false
+      
+    default:
+      isAnimationStopped = true
+    }
   }
 }
+
