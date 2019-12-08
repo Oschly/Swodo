@@ -23,7 +23,14 @@ struct RingView: View {
       
       HStack {
         Button("Resume") {
-          self.viewModel.startWorkCycle()
+          print(self.viewModel.progressValue)
+          switch self.viewModel.previousTimerState {
+          case .breakTime:
+            self.viewModel.startBreakCycle()
+          default:
+            self.viewModel.startWorkCycle()
+            print("\(self.viewModel.previousTimerState)")
+          }
         }
         Button("Stop") {
           self.viewModel.stopWorkSession()
@@ -39,10 +46,7 @@ struct RingView: View {
   }
   
   // Move to ViewModel!
-
+  
 }
 
 
-extension NSNotification.Name {
-  static let appIsGoingToBackground = Notification.Name("AppIsGoingToBackground")
-}

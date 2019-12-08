@@ -11,5 +11,8 @@ extension String {
   static let numberOfSessionsKey = "numberOfSessions"
   static let workTimeKey = "workTime"
   static let dateKey = "date"
-  static let stateString = "timerState"
+  static let stateKey = "timerState"
+  static let timerState = "timerState"
+  static let previousTimerState = "previousTimerState"
+  static let progressValueKey = "progressValue"
 }

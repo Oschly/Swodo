@@ -9,26 +9,28 @@
 import Foundation
 
 final class MainViewModel: ObservableObject {
+  private let notificationCenter = NotificationCenter.default
+  private let userDefaults = UserDefaults.standard
   
-  // Ring's animation data
-  @Published var progressValue = 1.0
+  @Published var progressValue: Double
   @Published var animationDuration = 5.0
   @Published var isAnimationStopped = true
+  @Published var numberOfSessions = 1
+  @Published var state: TimerState
   @Published var workTime = 1 {
     didSet {
       self.animationDuration = Double(workTime * 5)
     }
   }
   
+  var previousTimerState: TimerState
   var countdownTimer: Timer?
-  
-  // Manage sessions (work-break time)
-  @Published var numberOfSessions = 1
-  @Published var state: TimerState = .notStarted
+  var isReadingExecuted = false
   
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
     guard isAnimationStopped else { return }
+    previousTimerState = state
     state = .workTime
     isAnimationStopped = false
     
@@ -41,17 +43,20 @@ final class MainViewModel: ObservableObject {
         self.animationDuration = 1.0
         self.numberOfSessions -= 1
         
-        if self.numberOfSessions != 0 {
+        if self.numberOfSessions > 0 {
           self.animationDuration = 0
           self.startBreakCycle()
         } else {
-          self.state = .stopped
+          self.previousTimerState = self.state
+          self.state = .notStarted
           self.animationDuration = Double(self.workTime * 5)
           self.progressValue = 1.0
+          self.numberOfSessions = 1
         }
         return
         
       }
+      
       self.progressValue = self.animationDuration/Double(self.workTime * 5)
       self.animationDuration -= 0.1
     })
@@ -60,9 +65,11 @@ final class MainViewModel: ObservableObject {
   
   internal func startBreakCycle() {
     guard isAnimationStopped else { return }
+    previousTimerState = state
     state = .breakTime
     isAnimationStopped = false
-    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
+    DispatchQueue.main.async {
+      self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
       guard let self = self else { return }
       guard self.animationDuration < Double(self.workTime * 5) else {
         self.countdownTimer?.invalidate()
@@ -79,6 +86,7 @@ final class MainViewModel: ObservableObject {
         self.progressValue = 1.0
       }
     })
+    }
     countdownTimer?.fire()
     
   }
@@ -86,6 +94,7 @@ final class MainViewModel: ObservableObject {
   func stopWorkSession() {
     countdownTimer?.invalidate()
     countdownTimer = nil
+    previousTimerState = state
     state = .stopped
     isAnimationStopped = true
     progressValue = 1.0
@@ -101,45 +110,85 @@ final class MainViewModel: ObservableObject {
   }
   
   func saveSession(aNotification: Notification) {
+    if state == .paused {
+      return
+    }
+    countdownTimer?.invalidate()
+    countdownTimer = nil
+    isAnimationStopped = true
+    
     let userDefaults = UserDefaults.standard
     
-    userDefaults.set(state.rawValue, forKey: "timerState")
+    userDefaults.set(state.rawValue, forKey: .stateKey)
     
-    // Prevent changing values at saving time.
-    state = .paused
+    previousTimerState = state
+    userDefaults.set(previousTimerState.rawValue, forKey: .previousTimerState)
+    
+    userDefaults.set(progressValue, forKey: .progressValueKey)
     
     userDefaults.set(numberOfSessions, forKey: .numberOfSessionsKey)
     userDefaults.set(workTime, forKey: .workTimeKey)
     userDefaults.set(Date(), forKey: .dateKey)
-  }
+    
+    }
   
-  func readUnfinishedSession(aNotification: Notification) {
-    let userDefaults = UserDefaults.standard
+  func readUnfinishedSession(_ aNotification: Notification?) {
+    guard !isReadingExecuted else { return }
+    isReadingExecuted = true
+    
+    print(state)
+    if state == .notStarted {
+      progressValue = 1.0
+      return
+    }
+    
     userDefaults.register(defaults: [.workTimeKey : 5])
     
     let exitDate = userDefaults.value(forKey: .dateKey) as! Date
-    let actualDate = Date()
-    var differenceBetweenDates = exitDate.distance(to: actualDate)
+    var differenceBetweenDates = -exitDate.timeIntervalSinceNow
     
     workTime = userDefaults.integer(forKey: .workTimeKey)
     numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
     
     while differenceBetweenDates > Double(workTime * 5) {
+      if numberOfSessions == 1 {
+        state = .notStarted
+      }
+      
       numberOfSessions -= 1
       differenceBetweenDates -= Double(workTime * 5)
     }
     
+    progressValue = userDefaults.double(forKey: .progressValueKey)
     animationDuration = differenceBetweenDates
-    progressValue = animationDuration / Double(workTime * 5)
-    state = TimerState(rawValue: userDefaults.string(forKey: .stateString) ?? "notStarted")!
-    
+    resumeTimer(nil)
+  }
+  
+  internal func resumeTimer(_ aNotification: Notification?) {
+    countdownTimer?.invalidate()
+    countdownTimer = nil
+    isAnimationStopped = true
+
     switch state {
-    case .workTime, .breakTime:
-      isAnimationStopped = false
-      
+      case .workTime:
+        startWorkCycle()
+        
+      case .breakTime:
+        startBreakCycle()
+        
     default:
-      isAnimationStopped = true
+      break
     }
+  }
+  
+  init() {
+    progressValue = userDefaults.double(forKey: .progressValueKey)
+    previousTimerState = TimerState(rawValue: userDefaults.string(forKey: .previousTimerState) ?? TimerState.notStarted.rawValue)!
+    state = TimerState(rawValue: userDefaults.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
+    
+    notificationCenter.addObserver(forName: .appIsGoingToForeground, object: nil, queue: nil, using: readUnfinishedSession(_:))
+    
+    readUnfinishedSession(nil)
   }
 }
 

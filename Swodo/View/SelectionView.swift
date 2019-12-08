@@ -44,6 +44,8 @@ struct SelectionView: View {
         HStack(spacing: 80) {
           Button("Start") {
             self.viewModel.startWorkCycle()
+            self.viewModel.progressValue = 1.0
+            self.viewModel.animationDuration = Double(self.viewModel.workTime * 5)
           }
           Button("Stop") {
             self.viewModel.stopWorkSession()

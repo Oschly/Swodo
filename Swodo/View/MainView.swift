@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MainView: View {
-  @ObservedObject private var viewModel = MainViewModel()
+  @ObservedObject var viewModel: MainViewModel
   
   var body: some View {
       switch viewModel.state {
@@ -30,10 +30,3 @@ struct MainView: View {
       }
   }
 }
-
-struct MainView_Previews: PreviewProvider {
-  static var previews: some View {
-    MainView()
-  }
-}
-

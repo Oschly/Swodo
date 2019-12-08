@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct TabBarView: View {
+  @ObservedObject var mainViewModel: MainViewModel
+  
   var body: some View {
     TabView {
-      MainView().tabItem {
+      MainView(viewModel: mainViewModel).tabItem {
         Text("Timer")
         Image(systemName: "clock")
       }
