@@ -6,20 +6,36 @@
 //  Copyright © 2019 Oschły. All rights reserved.
 //
 
+#warning("Time variable isn't calculated on launch!")
+
 import Foundation
 
 final class MainViewModel: ObservableObject {
   private let notificationCenter = NotificationCenter.default
   private let userDefaults = UserDefaults.standard
+  private var formatter: DateComponentsFormatter {
+    let tempFormatter = DateComponentsFormatter()
+    tempFormatter.allowedUnits = [.minute, .second]
+    tempFormatter.unitsStyle = .positional
+    
+    return tempFormatter
+  }
   
   @Published var progressValue: Double
-  @Published var animationDuration = 5.0
+  @Published var time: String = ""
   @Published var isAnimationStopped = true
   @Published var numberOfSessions = 1
   @Published var state: TimerState
   @Published var workTime = 1 {
     didSet {
       self.animationDuration = Double(workTime * 5)
+    }
+  }
+  
+  @Published var animationDuration = 5.0 {
+    willSet {
+      guard let time = formatter.string(from: newValue) else { return }
+      self.time = time
     }
   }
   
@@ -70,22 +86,22 @@ final class MainViewModel: ObservableObject {
     isAnimationStopped = false
     DispatchQueue.main.async {
       self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
-      guard let self = self else { return }
-      guard self.animationDuration < Double(self.workTime * 5) else {
-        self.countdownTimer?.invalidate()
-        self.countdownTimer = nil
-        self.isAnimationStopped = true
-        self.startWorkCycle()
-        
-        return
-      }
-      self.progressValue = self.animationDuration/Double(self.workTime * 5)
-      self.animationDuration += 0.1
-      #warning("Bigger amount of time makes animation bugged with that if-condition")
-      if self.progressValue > 0.99 {
-        self.progressValue = 1.0
-      }
-    })
+        guard let self = self else { return }
+        guard self.animationDuration < Double(self.workTime * 5) else {
+          self.countdownTimer?.invalidate()
+          self.countdownTimer = nil
+          self.isAnimationStopped = true
+          self.startWorkCycle()
+          
+          return
+        }
+        self.progressValue = self.animationDuration/Double(self.workTime * 5)
+        self.animationDuration += 0.1
+        #warning("Bigger amount of time makes animation bugged with that if-condition")
+        if self.progressValue > 0.99 {
+          self.progressValue = 1.0
+        }
+      })
     }
     countdownTimer?.fire()
     
@@ -109,7 +125,7 @@ final class MainViewModel: ObservableObject {
     self.isAnimationStopped = true
   }
   
-  func saveSession(aNotification: Notification) {
+  func saveSession() {
     if state == .paused {
       return
     }
@@ -130,9 +146,9 @@ final class MainViewModel: ObservableObject {
     userDefaults.set(workTime, forKey: .workTimeKey)
     userDefaults.set(Date(), forKey: .dateKey)
     
-    }
+  }
   
-  func readUnfinishedSession(_ aNotification: Notification?) {
+  func readUnfinishedSession() {
     guard !isReadingExecuted else { return }
     isReadingExecuted = true
     
@@ -168,14 +184,14 @@ final class MainViewModel: ObservableObject {
     countdownTimer?.invalidate()
     countdownTimer = nil
     isAnimationStopped = true
-
+    
     switch state {
-      case .workTime:
-        startWorkCycle()
-        
-      case .breakTime:
-        startBreakCycle()
-        
+    case .workTime:
+      startWorkCycle()
+      
+    case .breakTime:
+      startBreakCycle()
+      
     default:
       break
     }
@@ -185,10 +201,6 @@ final class MainViewModel: ObservableObject {
     progressValue = userDefaults.double(forKey: .progressValueKey)
     previousTimerState = TimerState(rawValue: userDefaults.string(forKey: .previousTimerState) ?? TimerState.notStarted.rawValue)!
     state = TimerState(rawValue: userDefaults.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
-    
-    notificationCenter.addObserver(forName: .appIsGoingToForeground, object: nil, queue: nil, using: readUnfinishedSession(_:))
-    
-    readUnfinishedSession(nil)
   }
 }
 

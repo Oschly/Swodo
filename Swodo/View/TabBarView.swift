@@ -12,10 +12,12 @@ struct TabBarView: View {
   @ObservedObject var mainViewModel: MainViewModel
   
   var body: some View {
-    TabView {
-      MainView(viewModel: mainViewModel).tabItem {
-        Text("Timer")
-        Image(systemName: "clock")
+    ZStack {
+      TabView {
+        MainView(viewModel: mainViewModel).tabItem {
+          Text("Timer")
+          Image(systemName: "clock")
+        }
       }
     }
   }

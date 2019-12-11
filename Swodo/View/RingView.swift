@@ -10,43 +10,48 @@ import SwiftUI
 
 struct RingView: View {
   @ObservedObject var viewModel: MainViewModel
-  
-  private let notificationCenter = NotificationCenter.default
-  
+    
   var body: some View {
-    VStack {
-      Ring(fillPoint: viewModel.progressValue)
-        .stroke(Color.red, lineWidth: 15.0)
-        .frame(width: 200, height: 200)
-        .padding(40)
-        .animation(viewModel.isAnimationStopped ? nil : .easeIn(duration: 0.1))
-      
-      HStack {
-        Button("Resume") {
-          print(self.viewModel.progressValue)
-          switch self.viewModel.previousTimerState {
-          case .breakTime:
-            self.viewModel.startBreakCycle()
-          default:
-            self.viewModel.startWorkCycle()
-            print("\(self.viewModel.previousTimerState)")
+    GeometryReader { geometry in
+      VStack {
+        ZStack {
+          Ring(fillPoint: self.viewModel.progressValue)
+            .stroke(Color.red, lineWidth: 15.0)
+            .frame(width: geometry.size.width * 0.8,
+                   height: geometry.size.height / 3)
+            .padding(40)
+            .animation(self.viewModel.isAnimationStopped ? nil : .easeIn(duration: 0.1))
+            .padding(geometry.size.height * 0.05)
+          
+          Text(self.viewModel.time)
+            .font(.largeTitle)
+          .bold()
+            .fontWeight(.heavy)
+        }
+        
+        Spacer()
+        HStack() {
+          Button("Resume") {
+            print(self.viewModel.progressValue)
+            switch self.viewModel.previousTimerState {
+            case .breakTime:
+              self.viewModel.startBreakCycle()
+            default:
+              self.viewModel.startWorkCycle()
+              print("\(self.viewModel.previousTimerState)")
+            }
+          }
+          Button("Stop") {
+            self.viewModel.stopWorkSession()
+          }
+          Button("Pause") {
+            self.viewModel.pauseAnimation()
           }
         }
-        Button("Stop") {
-          self.viewModel.stopWorkSession()
-        }
-        Button("Pause") {
-          self.viewModel.pauseAnimation()
-        }
+        Spacer(minLength: geometry.size.height / 3 + 5)
       }
     }
-    .onAppear {
-      self.notificationCenter.addObserver(forName: .appIsGoingToBackground, object: nil, queue: nil, using: self.viewModel.saveSession)
-    }
   }
-  
-  // Move to ViewModel!
-  
 }
 
 
