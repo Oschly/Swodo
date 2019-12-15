@@ -16,7 +16,8 @@ struct RingView: View {
       VStack {
         ZStack {
           Ring(fillPoint: self.viewModel.progressValue)
-            .stroke(Color.red, lineWidth: 15.0)
+            .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+            .foregroundColor(.red)
             .frame(width: geometry.size.width * 0.8,
                    height: geometry.size.height / 3)
             .padding(40)
