@@ -47,12 +47,6 @@ struct SelectionView: View {
             self.viewModel.progressValue = 1.0
             self.viewModel.animationDuration = Double(self.viewModel.workTime * 5)
           }
-          Button("Stop") {
-            self.viewModel.stopWorkSession()
-          }
-          Button("Pause") {
-            self.viewModel.pauseAnimation()
-          }
         }
       }
     }

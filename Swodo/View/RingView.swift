@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RingView: View {
   @ObservedObject var viewModel: MainViewModel
-    
+  
   var body: some View {
     GeometryReader { geometry in
       VStack {
@@ -25,27 +25,14 @@ struct RingView: View {
           
           Text(self.viewModel.time)
             .font(.largeTitle)
-          .bold()
+            .bold()
             .fontWeight(.heavy)
         }
         
         Spacer()
         HStack() {
-          Button("Resume") {
-            print(self.viewModel.progressValue)
-            switch self.viewModel.previousTimerState {
-            case .breakTime:
-              self.viewModel.startBreakCycle()
-            default:
-              self.viewModel.startWorkCycle()
-              print("\(self.viewModel.previousTimerState)")
-            }
-          }
           Button("Stop") {
             self.viewModel.stopWorkSession()
-          }
-          Button("Pause") {
-            self.viewModel.pauseAnimation()
           }
         }
         Spacer(minLength: geometry.size.height / 3 + 5)
