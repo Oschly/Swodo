@@ -13,7 +13,7 @@ struct TabBarView: View {
   
   var body: some View {
     if mainViewModel.state == .workTime {
-      AnyView(MainView(viewModel: mainViewModel))
+      return AnyView(MainView(viewModel: mainViewModel))
     }
     return withAnimation {
       AnyView(TabView {
