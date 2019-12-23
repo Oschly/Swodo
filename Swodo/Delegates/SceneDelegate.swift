@@ -26,14 +26,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
   }
   
-  func sceneDidBecomeActive(_ scene: UIScene) {
-    mainViewModel.readUnfinishedSession()
-  }
-  
   func sceneWillResignActive(_ scene: UIScene) {
     mainViewModel.saveSession()
   }
 
+  func sceneWillEnterForeground(_ scene: UIScene) {
+    mainViewModel.readUnfinishedSession()
+  }
+  
   func sceneDidEnterBackground(_ scene: UIScene) {
     
     // Save state and data

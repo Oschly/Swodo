@@ -13,7 +13,7 @@ struct TabBarView: View {
   @State private var opacity = 0.0
   
   var body: some View {
-    if mainViewModel.state == .workTime {
+    if mainViewModel.state == .workTime || mainViewModel.state == .breakTime {
       return AnyView(MainView(viewModel: mainViewModel)
         .opacity(opacity)
         .onAppear {

@@ -34,7 +34,8 @@ final class MainViewModel: ObservableObject {
   
   @Published var animationDuration = 5.0 {
     willSet {
-      guard let time = formatter.string(from: newValue) else { return }
+      let roundedValue = newValue.rounded(.towardZero)
+      guard let time = formatter.string(from: roundedValue) else { return }
       self.time = time
     }
   }
@@ -126,9 +127,8 @@ final class MainViewModel: ObservableObject {
   }
   
   func saveSession() {
-    if state == .paused {
-      return
-    }
+    isReadingExecuted = false
+    
     countdownTimer?.invalidate()
     countdownTimer = nil
     isAnimationStopped = true
@@ -144,6 +144,7 @@ final class MainViewModel: ObservableObject {
     
     userDefaults.set(numberOfSessions, forKey: .numberOfSessionsKey)
     userDefaults.set(workTime, forKey: .workTimeKey)
+    userDefaults.set(animationDuration, forKey: "leftAnimationDuration")
     userDefaults.set(Date(), forKey: .dateKey)
     
   }
@@ -152,7 +153,6 @@ final class MainViewModel: ObservableObject {
     guard !isReadingExecuted else { return }
     isReadingExecuted = true
     
-    print(state)
     if state == .notStarted {
       progressValue = 1.0
       return
@@ -162,7 +162,7 @@ final class MainViewModel: ObservableObject {
     
     let exitDate = userDefaults.value(forKey: .dateKey) as! Date
     var differenceBetweenDates = -exitDate.timeIntervalSinceNow
-    
+
     workTime = userDefaults.integer(forKey: .workTimeKey)
     numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
     
@@ -175,8 +175,14 @@ final class MainViewModel: ObservableObject {
       differenceBetweenDates -= Double(workTime * 5)
     }
     
+    let leftAnimationTime = userDefaults.double(forKey: "leftAnimationDuration")
     progressValue = userDefaults.double(forKey: .progressValueKey)
-    animationDuration = differenceBetweenDates
+    
+    if state == .workTime {
+    animationDuration = leftAnimationTime - differenceBetweenDates
+    } else {
+      animationDuration = leftAnimationTime + differenceBetweenDates
+    }
     resumeTimer(nil)
   }
   
