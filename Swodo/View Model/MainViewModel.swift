@@ -6,8 +6,6 @@
 //  Copyright © 2019 Oschły. All rights reserved.
 //
 
-#warning("Time variable isn't calculated on launch!")
-
 import Foundation
 
 final class MainViewModel: ObservableObject {
