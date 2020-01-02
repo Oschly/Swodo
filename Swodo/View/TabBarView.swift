@@ -35,7 +35,7 @@ struct TabBarView: View {
         }
       }
       
-      Text("Stats").tabItem {
+      HistoryView().tabItem {
         VStack {
           Text("Statistics")
           Image(systemName: "chart.bar")

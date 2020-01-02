@@ -12,7 +12,7 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
 
-  let mainViewModel = MainViewModel()
+  var mainViewModel = MainViewModel()
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext

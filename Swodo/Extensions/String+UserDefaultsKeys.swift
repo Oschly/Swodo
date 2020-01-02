@@ -13,6 +13,5 @@ extension String {
   static let dateKey = "date"
   static let stateKey = "timerState"
   static let timerState = "timerState"
-  static let previousTimerState = "previousTimerState"
   static let progressValueKey = "progressValue"
 }

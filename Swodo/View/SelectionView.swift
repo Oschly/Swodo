@@ -10,7 +10,8 @@ import SwiftUI
 
 struct SelectionView: View {
   @ObservedObject var viewModel: MainViewModel
-  
+  @Environment(\.managedObjectContext) var moc
+
   var body: some View {
     GeometryReader { geometry in
       VStack {
@@ -43,6 +44,11 @@ struct SelectionView: View {
         
         HStack(spacing: 80) {
           Button("Start") {
+            self.viewModel.moc = self.moc
+            self.viewModel.startSessionDate = Date()
+            self.viewModel.numberOfWorkIntervals = 5
+            self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime * 5)
+            
             self.viewModel.startWorkCycle()
             self.viewModel.progressValue = 1.0
             self.viewModel.animationDuration = Double(self.viewModel.workTime * 5)

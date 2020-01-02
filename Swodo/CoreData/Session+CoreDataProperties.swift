@@ -27,3 +27,5 @@ extension Session {
     @NSManaged public var totalWorkDuration: Int16
 
 }
+
+//extension Session: Identifiable {}
