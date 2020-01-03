@@ -6,11 +6,13 @@
 //  Copyright © 2019 Oschły. All rights reserved.
 //
 
+import Foundation
+import CoreGraphics
 import CoreData
 
 #warning("Breaks aren't implemented properly!")
 final class MainViewModel: ObservableObject {
-  var moc: NSManagedObjectContext?
+  private var context: NSManagedObjectContext?
   
   private let notificationCenter = NotificationCenter.default
   private let userDefaults = UserDefaults.standard
@@ -22,20 +24,19 @@ final class MainViewModel: ObservableObject {
     return tempFormatter
   }
   
-  @Published var progressValue: Double
+  @Published var progressValue: CGFloat = 0
   @Published var time: String = ""
-  @Published var isAnimationStopped = true
   @Published var numberOfSessions = 1
   @Published var state: TimerState
-  @Published var workTime = 1 {
+  @Published var workTime: CGFloat = 1 {
     didSet {
-      self.animationDuration = Double(workTime * 5)
+      self.animationDuration = workTime
     }
   }
   
-  @Published var animationDuration = 5.0 {
+  @Published var animationDuration: CGFloat = 5.0 {
     willSet {
-      let roundedValue = newValue.rounded(.towardZero)
+      let roundedValue = Double(newValue.rounded(.towardZero))
       guard let time = formatter.string(from: roundedValue) else { return }
       self.time = time
     }
@@ -50,15 +51,11 @@ final class MainViewModel: ObservableObject {
   
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
-    guard isAnimationStopped else { return }
     state = .workTime
-    isAnimationStopped = false
     
     countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] (timer) in
       guard self.animationDuration > 0 else {
         self.countdownTimer?.invalidate()
-        self.countdownTimer = nil
-        self.isAnimationStopped = true
         self.animationDuration = 1.0
         self.numberOfSessions -= 1
         
@@ -67,9 +64,9 @@ final class MainViewModel: ObservableObject {
           self.startBreakCycle()
         } else {
           
-          let totalWork = self.numberOfWorkIntervals * self.singleWorkDuration + (self.numberOfWorkIntervals - 1) * 5
+          let totalWork = self.numberOfWorkIntervals * self.singleWorkDuration + (self.numberOfWorkIntervals - 1)
           
-          let session = Session(context: self.moc!)
+          let session = Session(context: self.context!)
           session.canceled = false
           session.endDate = Date()
           session.id = UUID()
@@ -79,10 +76,10 @@ final class MainViewModel: ObservableObject {
           session.totalWorkDuration = totalWork
           session.singleWorkDuration = self.singleWorkDuration
           
-          try! self.moc!.save()
+          try? self.context!.save()
           
           self.state = .notStarted
-          self.animationDuration = Double(self.workTime * 5)
+          self.animationDuration = self.workTime
           self.progressValue = 1.0
           self.numberOfSessions = 1
         }
@@ -90,27 +87,24 @@ final class MainViewModel: ObservableObject {
         
       }
       
-      self.progressValue = self.animationDuration/Double(self.workTime * 5)
+      self.progressValue = self.animationDuration/self.workTime
       self.animationDuration -= 0.1
     })
     self.countdownTimer?.fire()
   }
   
   internal func startBreakCycle() {
-    guard isAnimationStopped else { return }
     state = .breakTime
-    isAnimationStopped = false
     DispatchQueue.main.async {
       self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] (timer) in
-        guard self.animationDuration < Double(self.workTime * 5) else {
+        guard self.animationDuration < self.workTime else {
           self.countdownTimer?.invalidate()
           self.countdownTimer = nil
-          self.isAnimationStopped = true
           self.startWorkCycle()
           
           return
         }
-        self.progressValue = self.animationDuration/Double(self.workTime * 5)
+        self.progressValue = self.animationDuration/self.workTime
         self.animationDuration += 0.1
         #warning("Bigger amount of time makes animation bugged with that if-condition")
         if self.progressValue > 0.99 {
@@ -126,17 +120,15 @@ final class MainViewModel: ObservableObject {
     countdownTimer?.invalidate()
     countdownTimer = nil
     state = .stopped
-    isAnimationStopped = true
     progressValue = 1.0
     
     // It somehow fixes the bug with invalid ring's value resetting.
-    animationDuration = Double(workTime * 5)
+    animationDuration = workTime
   }
   
   func pauseAnimation() {
     countdownTimer?.invalidate()
     countdownTimer = nil
-    self.isAnimationStopped = true
   }
   
   func saveSession() {
@@ -144,7 +136,6 @@ final class MainViewModel: ObservableObject {
     
     countdownTimer?.invalidate()
     countdownTimer = nil
-    isAnimationStopped = true
     
     let userDefaults = UserDefaults.standard
     
@@ -169,25 +160,25 @@ final class MainViewModel: ObservableObject {
     userDefaults.register(defaults: [.workTimeKey : 5])
     
     let exitDate = userDefaults.value(forKey: .dateKey) as! Date
-    var differenceBetweenDates = -exitDate.timeIntervalSinceNow
-
-    workTime = userDefaults.integer(forKey: .workTimeKey)
+    var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
+    
+    workTime = CGFloat(userDefaults.integer(forKey: .workTimeKey))
     numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
     
-    while differenceBetweenDates > Double(workTime * 5) {
+    while differenceBetweenDates > workTime {
       if numberOfSessions == 1 {
         state = .notStarted
       }
       
       numberOfSessions -= 1
-      differenceBetweenDates -= Double(workTime * 5)
+      differenceBetweenDates -= workTime
     }
     
-    let leftAnimationTime = userDefaults.double(forKey: .animationDurationKey)
-    progressValue = userDefaults.double(forKey: .progressValueKey)
+    let leftAnimationTime = CGFloat(userDefaults.float(forKey: .animationDurationKey))
+    progressValue = CGFloat(userDefaults.float(forKey: .progressValueKey))
     
     if state == .workTime {
-    animationDuration = leftAnimationTime - differenceBetweenDates
+      animationDuration = leftAnimationTime - differenceBetweenDates
     } else {
       animationDuration = leftAnimationTime + differenceBetweenDates
     }
@@ -198,7 +189,6 @@ final class MainViewModel: ObservableObject {
   internal func resumeTimer(_ aNotification: Notification?) {
     countdownTimer?.invalidate()
     countdownTimer = nil
-    isAnimationStopped = true
     
     switch state {
     case .workTime:
@@ -210,8 +200,15 @@ final class MainViewModel: ObservableObject {
     }
   }
   
+  func setupContext(_ context: NSManagedObjectContext) {
+    if context.parent == nil {
+      self.context = context
+    }
+  }
+  
   init() {
-    progressValue = userDefaults.double(forKey: .progressValueKey)
+    progressValue = CGFloat(userDefaults.float(forKey: .progressValueKey))
     state = TimerState(rawValue: userDefaults.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
   }
 }
+

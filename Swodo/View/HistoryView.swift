@@ -9,17 +9,20 @@
 import SwiftUI
 
 struct HistoryView: View {
-  @FetchRequest(entity: Session.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Session.endDate, ascending: true)]) var sessions: FetchedResults<Session>
+  @FetchRequest(entity: Session.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Session.endDate, ascending: false)]) var sessions: FetchedResults<Session>
   
-    var body: some View {
+  var body: some View {
+    NavigationView {
       List(sessions, id: \.self) { session in
         Text(String(session.singleWorkDuration))
       }
+      .navigationBarTitle("Statistics")
     }
+  }
 }
 
 struct HistoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        HistoryView()
-    }
+  static var previews: some View {
+    HistoryView()
+  }
 }

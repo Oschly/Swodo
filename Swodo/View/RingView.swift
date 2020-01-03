@@ -15,14 +15,16 @@ struct RingView: View {
     GeometryReader { geometry in
       VStack {
         ZStack {
-          Ring(fillPoint: self.viewModel.progressValue)
+          Circle()
+            .trim(from: 0, to: self.viewModel.progressValue)
             .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+            .animation(.default)
             .foregroundColor(.red)
             .frame(width: geometry.size.width * 0.8,
                    height: geometry.size.height / 3)
-            .padding(40)
-            .animation(self.viewModel.isAnimationStopped ? nil : .easeIn(duration: 0.1))
             .padding(geometry.size.height * 0.05)
+          .rotationEffect(.degrees(-90))
+
           
           Text(self.viewModel.time)
             .font(.largeTitle)

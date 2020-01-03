@@ -18,8 +18,8 @@ struct SelectionView: View {
         HStack {
           VStack {
             Picker(selection: self.$viewModel.workTime, label: Text("")) {
-              ForEach(1...24, id: \.self) { index in
-                Text("\(index * 5) Minutes")
+              ForEach(Array<CGFloat>(stride(from: 5, to: 121, by: 5)), id: \.self) { index in
+                Text(String(format: "%.0f", index) + " Minutes")
               }
             }.frame(maxWidth: geometry.size.width / 2,
                     maxHeight: 74)
@@ -44,14 +44,14 @@ struct SelectionView: View {
         
         HStack(spacing: 80) {
           Button("Start") {
-            self.viewModel.moc = self.moc
+            self.viewModel.setupContext(self.moc)
             self.viewModel.startSessionDate = Date()
             self.viewModel.numberOfWorkIntervals = 5
-            self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime * 5)
+            self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime)
             
             self.viewModel.startWorkCycle()
             self.viewModel.progressValue = 1.0
-            self.viewModel.animationDuration = Double(self.viewModel.workTime * 5)
+            self.viewModel.animationDuration = self.viewModel.workTime
           }
         }
       }
