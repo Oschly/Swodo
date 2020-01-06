@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0488BDC02331078500E44F71 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488BDBF2331078500E44F71 /* MainView.swift */; };
-		04DA25E12330B711005193E7 /* Ring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA25E02330B711005193E7 /* Ring.swift */; };
 		04DA25E52330BF31005193E7 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA25E42330BF31005193E7 /* MainViewModel.swift */; };
 		4703A62D23BDEC5800976C26 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4703A62C23BDEC5800976C26 /* HistoryView.swift */; };
 		47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */; };
@@ -50,7 +49,6 @@
 
 /* Begin PBXFileReference section */
 		0488BDBF2331078500E44F71 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		04DA25E02330B711005193E7 /* Ring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ring.swift; sourceTree = "<group>"; };
 		04DA25E42330BF31005193E7 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		4703A62C23BDEC5800976C26 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UserDefaultsKeys.swift"; sourceTree = "<group>"; };
@@ -125,7 +123,6 @@
 		04DA25DF2330B6FE005193E7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				04DA25E02330B711005193E7 /* Ring.swift */,
 				47592912239B7FA400000746 /* TimerState.swift */,
 			);
 			path = Model;
@@ -366,7 +363,6 @@
 				47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */,
 				0488BDC02331078500E44F71 /* MainView.swift in Sources */,
 				478AF9B6239AD48A00B9EABA /* RingView.swift in Sources */,
-				04DA25E12330B711005193E7 /* Ring.swift in Sources */,
 				47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */,
 				4703A62D23BDEC5800976C26 /* HistoryView.swift in Sources */,
 				47D4DFA2239D1844009C5D84 /* Notification.Name+CustomNames.swift in Sources */,

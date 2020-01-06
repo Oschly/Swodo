@@ -8,10 +8,7 @@
 
 enum TimerState: String {
   case notStarted
-  case stopped
-  case paused
   case workTime
-  case endOfWork
   case breakTime
-  case endOfBreak
+  case stopped
 }

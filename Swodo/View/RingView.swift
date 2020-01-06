@@ -38,7 +38,11 @@ struct RingView: View {
             self.viewModel.stopWorkSession()
           }
         }
-        Spacer(minLength: geometry.size.height / 3 + 5)
+        Spacer()
+        List(1...256, id: \.self) { index in
+          Text("\(index)")
+        }
+//        Spacer(minLength: geometry.size.height / 3 + 5)
       }
     }
   }

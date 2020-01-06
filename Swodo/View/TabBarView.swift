@@ -14,16 +14,18 @@ struct TabBarView: View {
   
   var body: some View {
     if mainViewModel.state == .workTime || mainViewModel.state == .breakTime {
-      return AnyView(MainView(viewModel: mainViewModel)
-        .opacity(opacity)
-        .onAppear {
-          withAnimation(.easeIn) {
-            self.opacity = 1.0
-          }
-      }
-      .onDisappear {
-        self.opacity = 0.0
-      })
+      return AnyView(
+        MainView(viewModel: mainViewModel)
+          .opacity(opacity)
+          .onAppear {
+            withAnimation(.easeIn) {
+              self.opacity = 1.0
+            }
+        }
+        .onDisappear {
+          self.opacity = 0.0
+        }
+      )
     }
     
     return AnyView(TabView {
