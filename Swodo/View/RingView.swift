@@ -9,12 +9,18 @@
 import SwiftUI
 
 struct RingView: View {
-  @ObservedObject var viewModel: MainViewModel
+  @EnvironmentObject var viewModel: MainViewModel
   
   var body: some View {
     GeometryReader { geometry in
       VStack {
         ZStack {
+          Circle()
+            .stroke(lineWidth: 10.0)
+            .opacity(0.05)
+            .frame(width: geometry.size.width * 0.8,
+                   height: geometry.size.height / 3)
+          
           Circle()
             .trim(from: 0, to: self.viewModel.progressValue)
             .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))

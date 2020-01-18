@@ -16,7 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    let mainView = TabBarView(mainViewModel: mainViewModel).environment(\.managedObjectContext, context)
+    
+    let mainView = TabBarView(mainViewModel: mainViewModel)
+      .environment(\.managedObjectContext, context)
+      .environmentObject(mainViewModel)
 
     if let windowScene = scene as? UIWindowScene {
         let window = UIWindow(windowScene: windowScene)

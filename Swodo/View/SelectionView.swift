@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SelectionView: View {
-  @ObservedObject var viewModel: MainViewModel
+  @EnvironmentObject var viewModel: MainViewModel
   @Environment(\.managedObjectContext) var moc
 
   var body: some View {
@@ -27,6 +27,7 @@ struct SelectionView: View {
               .labelsHidden()
             Text("Session's duration")
           }
+          
           VStack {
             Picker(selection: self.$viewModel.numberOfSessions,
                    label: Text("Number of sessions")) {

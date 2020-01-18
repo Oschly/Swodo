@@ -9,7 +9,9 @@
 import SwiftUI
 
 struct HistoryView: View {
-  @FetchRequest(entity: Session.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Session.endDate, ascending: false)]) var sessions: FetchedResults<Session>
+  @FetchRequest(entity: Session.entity(),
+                sortDescriptors: [NSSortDescriptor(keyPath: \Session.endDate, ascending: false)])
+  private var sessions: FetchedResults<Session>
   
   var body: some View {
     NavigationView {
