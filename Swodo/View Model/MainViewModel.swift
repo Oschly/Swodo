@@ -10,11 +10,13 @@ import Foundation
 import CoreGraphics
 import CoreData
 
+
+
 #warning("Breaks aren't implemented properly!")
-final class MainViewModel: ObservableObject {
-  private var context: NSManagedObjectContext?
+final class MainViewModel: ObservableObject, StorageManagerDelegate {
+  internal var context: NSManagedObjectContext?
+  private let storageManager = StorageManager()
   
-  private let userDefaults = UserDefaults.standard
   private var formatter: DateComponentsFormatter {
     let tempFormatter = DateComponentsFormatter()
     tempFormatter.allowedUnits = [.minute, .second]
@@ -22,8 +24,6 @@ final class MainViewModel: ObservableObject {
     
     return tempFormatter
   }
-  
-  private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .background)
   
   @Published var progressValue: CGFloat = 0
   @Published var time: String = ""
@@ -46,6 +46,7 @@ final class MainViewModel: ObservableObject {
   var countdownTimer: Timer?
   var isReadingExecuted = false
   
+  #warning("Move objects below to StorageManager class")
   var startSessionDate: Date!
   var numberOfWorkIntervals: Int16?
   var singleWorkDuration: Int16?
@@ -55,7 +56,7 @@ final class MainViewModel: ObservableObject {
     state = .workTime
     
     countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] (timer) in
-
+      
       guard self.animationDuration > 0 else {
         self.countdownTimer?.invalidate()
         self.animationDuration = 1.0
@@ -69,12 +70,11 @@ final class MainViewModel: ObservableObject {
           self.state = .notStarted
           self.animationDuration = self.workTime
           self.progressValue = 1.0
-          self.numberOfSessions = 1
+          self.numberOfSessions = Int(self.numberOfWorkIntervals ?? 1)
         }
         return
         
       }
-      
       
       self.progressValue = self.animationDuration/self.workTime
       self.animationDuration -= 0.1
@@ -85,7 +85,6 @@ final class MainViewModel: ObservableObject {
   internal func startBreakCycle() {
     state = .breakTime
     self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] (timer) in
-      DispatchQueue.global(qos: .userInitiated).async {
       guard self.animationDuration < self.workTime else {
         self.countdownTimer?.invalidate()
         self.startWorkCycle()
@@ -99,13 +98,9 @@ final class MainViewModel: ObservableObject {
       if self.progressValue > 0.999 {
         self.progressValue = 1.0
       }
-      }
     })
     
-    DispatchQueue.main.async {
-      self.countdownTimer?.fire()
-    }
-    
+    self.countdownTimer?.fire()
   }
   
   func stopWorkSession() {
@@ -118,71 +113,25 @@ final class MainViewModel: ObservableObject {
   }
   
   func saveSession() {
-    isReadingExecuted = false
-    
     countdownTimer?.invalidate()
-    
-    let userDefaults = UserDefaults.standard
-    
-    userDefaultsQueue.async { [weak self] in
-      userDefaults.set(self?.state.rawValue, forKey: .stateKey)
-      userDefaults.set(self?.progressValue, forKey: .progressValueKey)
-      userDefaults.set(self?.numberOfSessions, forKey: .numberOfSessionsKey)
-      userDefaults.set(self?.workTime, forKey: .workTimeKey)
-      userDefaults.set(self?.animationDuration, forKey: .animationDurationKey)
-      userDefaults.set(Date(), forKey: .dateKey)
-    }
+    storageManager.saveSession()
   }
   
   func readUnfinishedSession() {
-    guard !isReadingExecuted else { return }
-    isReadingExecuted = true
-    
-    if state == .notStarted {
-      progressValue = 1.0
-      return
-    }
-    
-    userDefaults.register(defaults: [.workTimeKey : 5])
-    
-    let exitDate = userDefaults.value(forKey: .dateKey) as! Date
-    var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
-    
-    workTime = CGFloat(userDefaults.integer(forKey: .workTimeKey))
-    numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
-    
-    while differenceBetweenDates > workTime {
-      if numberOfSessions == 1 {
-        state = .notStarted
-      }
-      
-      numberOfSessions -= 1
-      differenceBetweenDates -= workTime
-    }
-    
-    let leftAnimationTime = CGFloat(userDefaults.float(forKey: .animationDurationKey))
-    progressValue = CGFloat(userDefaults.float(forKey: .progressValueKey))
-    
-    if state == .workTime {
-      animationDuration = leftAnimationTime - differenceBetweenDates
-    } else {
-      animationDuration = leftAnimationTime + differenceBetweenDates
-    }
-    
-    resumeTimer(nil)
+    storageManager.readUnfinishedSession()
+    resumeTimer()
   }
   
-  internal func resumeTimer(_ aNotification: Notification?) {
+  internal func resumeTimer() {
     countdownTimer?.invalidate()
-    countdownTimer = nil
     
     switch state {
-    case .workTime:
-      startWorkCycle()
-    case .breakTime:
-      startBreakCycle()
-    default:
-      break
+      case .workTime:
+        startWorkCycle()
+      case .breakTime:
+        startBreakCycle()
+      default:
+        break
     }
   }
   
@@ -193,28 +142,13 @@ final class MainViewModel: ObservableObject {
   }
   
   internal func saveToCoreData() {
-    guard let workIntervals = numberOfWorkIntervals,
-      let singleWorkDuration = singleWorkDuration else {
-        return
-    }
-    
-    let totalWork = workIntervals * singleWorkDuration + (workIntervals - 1)
-    
-    let session = Session(context: self.context!)
-    session.canceled = false
-    session.endDate = Date()
-    session.id = UUID()
-    session.numberOfWorkIntervals = workIntervals
-    session.singleBreakDuration = 5
-    session.startDate = self.startSessionDate
-    session.totalWorkDuration = totalWork
-    session.singleWorkDuration = singleWorkDuration
-    
-    try? self.context!.save()
+    storageManager.saveToCoreData()
   }
   
   init() {
-    progressValue = CGFloat(userDefaults.float(forKey: .progressValueKey))
-    state = TimerState(rawValue: userDefaults.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
+    progressValue = CGFloat(UserDefaults.standard.float(forKey: .progressValueKey))
+    state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
+    storageManager.delegate = self
   }
 }
+
