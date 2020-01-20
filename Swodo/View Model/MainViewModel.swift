@@ -43,10 +43,9 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
     }
   }
   
-  var countdownTimer: Timer?
+  var countdownTimer: Timer!
   var isReadingExecuted = false
   
-  #warning("Move objects below to StorageManager class")
   var startSessionDate: Date!
   var numberOfWorkIntervals: Int16?
   var singleWorkDuration: Int16?
@@ -66,7 +65,9 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
           self.animationDuration = 0
           self.startBreakCycle()
         } else {
+          self.animationDuration = 0
           self.saveToCoreData()
+          
           self.state = .notStarted
           self.animationDuration = self.workTime
           self.progressValue = 1.0
@@ -79,12 +80,12 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
       self.progressValue = self.animationDuration/self.workTime
       self.animationDuration -= 0.1
     })
-    self.countdownTimer?.fire()
+    RunLoop.current.add(countdownTimer!, forMode: .common)
   }
   
   internal func startBreakCycle() {
     state = .breakTime
-    self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] (timer) in
+    self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] timer in
       guard self.animationDuration < self.workTime else {
         self.countdownTimer?.invalidate()
         self.startWorkCycle()
@@ -99,8 +100,7 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
         self.progressValue = 1.0
       }
     })
-    
-    self.countdownTimer?.fire()
+    RunLoop.current.add(countdownTimer!, forMode: .common)
   }
   
   func stopWorkSession() {
