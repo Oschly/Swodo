@@ -12,13 +12,15 @@ struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
   @Environment(\.managedObjectContext) var moc
 
+  let workTimeValues = stride(from: 5, to: 121, by: 5)
+  
   var body: some View {
     GeometryReader { geometry in
       VStack {
         HStack {
           VStack {
             Picker(selection: self.$viewModel.workTime, label: Text("")) {
-              ForEach(Array<CGFloat>(stride(from: 5, to: 121, by: 5)), id: \.self) { index in
+              ForEach(Array(self.workTimeValues), id: \.self) { index in
                 Text(String(format: "%.0f", index) + " Minutes")
               }
             }.frame(maxWidth: geometry.size.width / 2,
@@ -34,7 +36,8 @@ struct SelectionView: View {
                     ForEach(1...10, id: \.self) { index in
                       Text("\(index)")
                     }
-            }.frame(maxWidth: geometry.size.width / 2,
+            }
+            .frame(maxWidth: geometry.size.width / 2,
                     maxHeight: 74)
               .clipped()
               .labelsHidden()
