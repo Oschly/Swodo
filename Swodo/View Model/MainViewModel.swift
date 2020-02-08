@@ -10,20 +10,10 @@ import Foundation
 import CoreGraphics
 import CoreData
 
-
-
 #warning("Breaks aren't implemented properly!")
 final class MainViewModel: ObservableObject, StorageManagerDelegate {
   internal var context: NSManagedObjectContext?
   private let storageManager = StorageManager()
-  
-  private var formatter: DateComponentsFormatter {
-    let tempFormatter = DateComponentsFormatter()
-    tempFormatter.allowedUnits = [.minute, .second]
-    tempFormatter.unitsStyle = .positional
-    
-    return tempFormatter
-  }
   
   @Published var progressValue: CGFloat = 0
   @Published var time: String = ""
@@ -37,9 +27,7 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
   
   @Published var animationDuration: CGFloat = 5.0 {
     willSet {
-      let roundedValue = Double(newValue.rounded(.towardZero))
-      guard let time = formatter.string(from: roundedValue) else { return }
-      self.time = time
+      self.time = newValue.timeFormattedToString()
     }
   }
   

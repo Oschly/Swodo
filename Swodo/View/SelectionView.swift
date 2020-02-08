@@ -12,16 +12,18 @@ struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
   @Environment(\.managedObjectContext) var moc
 
-  let workTimeValues = stride(from: 5, to: 121, by: 5)
+  let workTimeValues = stride(from: 5.cgfloat(),
+                              to: 121.cgfloat(),
+                              by: 5.cgfloat())
   
   var body: some View {
     GeometryReader { geometry in
       VStack {
-        HStack {
+        HStack(spacing: 0) {
           VStack {
             Picker(selection: self.$viewModel.workTime, label: Text("")) {
               ForEach(Array(self.workTimeValues), id: \.self) { index in
-                Text(String(format: "%.0f", index) + " Minutes")
+                Text(index.humanReadable() + " Minutes")
               }
             }.frame(maxWidth: geometry.size.width / 2,
                     maxHeight: 74)
@@ -58,6 +60,7 @@ struct SelectionView: View {
             self.viewModel.animationDuration = self.viewModel.workTime
           }
         }
+        Spacer()
       }
     }
   }

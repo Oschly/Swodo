@@ -10,6 +10,8 @@
 		0488BDC02331078500E44F71 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488BDBF2331078500E44F71 /* MainView.swift */; };
 		04DA25E52330BF31005193E7 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA25E42330BF31005193E7 /* MainViewModel.swift */; };
 		4703A62D23BDEC5800976C26 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4703A62C23BDEC5800976C26 /* HistoryView.swift */; };
+		470E2CBA23EEE39100591E4C /* Numbers+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E2CB923EEE39100591E4C /* Numbers+.swift */; };
+		470E2CBC23EEEF5400591E4C /* DateComponentsFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */; };
 		472AE8BC23DCD2A100FA95A8 /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */; };
 		47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */; };
 		47592913239B7FA400000746 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592912239B7FA400000746 /* TimerState.swift */; };
@@ -52,6 +54,8 @@
 		0488BDBF2331078500E44F71 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		04DA25E42330BF31005193E7 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		4703A62C23BDEC5800976C26 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		470E2CB923EEE39100591E4C /* Numbers+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Numbers+.swift"; sourceTree = "<group>"; };
+		470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateComponentsFormatter.swift; sourceTree = "<group>"; };
 		472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 		47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UserDefaultsKeys.swift"; sourceTree = "<group>"; };
 		47592912239B7FA400000746 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
@@ -163,6 +167,8 @@
 			children = (
 				47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */,
 				47D4DFA1239D1844009C5D84 /* Notification.Name+CustomNames.swift */,
+				470E2CB923EEE39100591E4C /* Numbers+.swift */,
+				470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -377,12 +383,14 @@
 				47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */,
 				4703A62D23BDEC5800976C26 /* HistoryView.swift in Sources */,
 				47D4DFA2239D1844009C5D84 /* Notification.Name+CustomNames.swift in Sources */,
+				470E2CBA23EEE39100591E4C /* Numbers+.swift in Sources */,
 				47592913239B7FA400000746 /* TimerState.swift in Sources */,
 				7565FE0A233093D5006A97EA /* TabBarView.swift in Sources */,
 				7565FE08233093D5006A97EA /* Swodo.xcdatamodeld in Sources */,
 				04DA25E52330BF31005193E7 /* MainViewModel.swift in Sources */,
 				47F314D723D39CB200503014 /* StorageManager.swift in Sources */,
 				478AF9B4239AD42800B9EABA /* SelectionView.swift in Sources */,
+				470E2CBC23EEEF5400591E4C /* DateComponentsFormatter.swift in Sources */,
 				47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
