@@ -16,7 +16,7 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
   private let storageManager = StorageManager()
   
   @Published var progressValue: CGFloat = 0
-  @Published var time: String = ""
+  @Published var time = String()
   @Published var numberOfSessions = 1
   @Published var state: TimerState
   @Published var workTime: CGFloat = 5 {
@@ -42,7 +42,8 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
   func startWorkCycle() {
     state = .workTime
     
-    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] (timer) in
+    countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
+      guard let self = self else { return }
       
       guard self.animationDuration > 0 else {
         self.countdownTimer?.invalidate()
@@ -53,8 +54,8 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
           self.animationDuration = 0
           self.startBreakCycle()
         } else {
-          self.animationDuration = 0
           self.saveToCoreData()
+          self.animationDuration = 0
           
           self.state = .notStarted
           self.animationDuration = self.workTime
@@ -65,15 +66,16 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
         
       }
       
-      self.progressValue = self.animationDuration/self.workTime
-      self.animationDuration -= 0.1
+      self.modifyProgressValue(mathOperation: .subtraction)
     })
     RunLoop.current.add(countdownTimer!, forMode: .common)
   }
   
   internal func startBreakCycle() {
     state = .breakTime
-    self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [unowned self] timer in
+    self.countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] timer in
+      guard let self = self else { return }
+      
       guard self.animationDuration < self.workTime else {
         self.countdownTimer?.invalidate()
         self.startWorkCycle()
@@ -81,13 +83,12 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
         return
       }
       
-      self.progressValue = self.animationDuration/self.workTime
-      self.animationDuration += 0.1
-      #warning("Bigger amount of time makes animation bugged with that if-condition")
+      self.modifyProgressValue(mathOperation: .addition)
       if self.progressValue > 0.999 {
         self.progressValue = 1.0
       }
     })
+    
     RunLoop.current.add(countdownTimer!, forMode: .common)
   }
   
@@ -96,7 +97,6 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
     state = .stopped
     progressValue = 1.0
     
-    // It somehow fixes the bug with invalid ring's value resetting.
     animationDuration = workTime
   }
   
@@ -137,6 +137,12 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
     progressValue = CGFloat(UserDefaults.standard.float(forKey: .progressValueKey))
     state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
     storageManager.delegate = self
+  }
+  
+  internal func modifyProgressValue(mathOperation: MathOperationType) {
+    let formula = 1 / (self.workTime / 0.1)
+    mathOperation.execute(lhs: &progressValue, rhs: formula)
+    mathOperation.execute(lhs: &animationDuration, rhs: 0.1)
   }
 }
 

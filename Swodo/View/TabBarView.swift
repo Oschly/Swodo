@@ -24,8 +24,7 @@ struct TabBarView: View {
         }
         .onDisappear {
           self.opacity = 0.0
-        }
-      )
+        })
     }
     
     return AnyView(TabView {

@@ -12,6 +12,7 @@
 		4703A62D23BDEC5800976C26 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4703A62C23BDEC5800976C26 /* HistoryView.swift */; };
 		470E2CBA23EEE39100591E4C /* Numbers+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E2CB923EEE39100591E4C /* Numbers+.swift */; };
 		470E2CBC23EEEF5400591E4C /* DateComponentsFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */; };
+		4715A98023F06B4F00B8E124 /* MathOperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4715A97F23F06B4F00B8E124 /* MathOperationType.swift */; };
 		472AE8BC23DCD2A100FA95A8 /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */; };
 		47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */; };
 		47592913239B7FA400000746 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592912239B7FA400000746 /* TimerState.swift */; };
@@ -56,6 +57,7 @@
 		4703A62C23BDEC5800976C26 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		470E2CB923EEE39100591E4C /* Numbers+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Numbers+.swift"; sourceTree = "<group>"; };
 		470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateComponentsFormatter.swift; sourceTree = "<group>"; };
+		4715A97F23F06B4F00B8E124 /* MathOperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathOperationType.swift; sourceTree = "<group>"; };
 		472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 		47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UserDefaultsKeys.swift"; sourceTree = "<group>"; };
 		47592912239B7FA400000746 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			children = (
 				47592912239B7FA400000746 /* TimerState.swift */,
 				47F314D623D39CB200503014 /* StorageManager.swift */,
+				4715A97F23F06B4F00B8E124 /* MathOperationType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7565FE03233093D5006A97EA /* AppDelegate.swift in Sources */,
+				4715A98023F06B4F00B8E124 /* MathOperationType.swift in Sources */,
 				7565FE05233093D5006A97EA /* SceneDelegate.swift in Sources */,
 				47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */,
 				0488BDC02331078500E44F71 /* MainView.swift in Sources */,
