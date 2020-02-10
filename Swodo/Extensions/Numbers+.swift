@@ -21,7 +21,7 @@ extension CGFloat {
   
   func timeFormattedToString() -> String {
     let formatter = DateComponentsFormatter.viewTimeFormatter
-    let rounded = self.rounded(.towardZero).double()
+    let rounded = self.rounded(.up).double()
     
     // TODO: - Some spicy handling here
     guard let string = formatter.string(from: rounded) else { return "" }

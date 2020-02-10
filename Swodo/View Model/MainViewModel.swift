@@ -10,8 +10,7 @@ import Foundation
 import CoreGraphics
 import CoreData
 
-#warning("Breaks aren't implemented properly!")
-final class MainViewModel: ObservableObject, StorageManagerDelegate {
+final class MainViewModel: ObservableObject {
   internal var context: NSManagedObjectContext?
   private let storageManager = StorageManager()
   
@@ -19,17 +18,8 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
   @Published var time = String()
   @Published var numberOfSessions = 1
   @Published var state: TimerState
-  @Published var workTime: CGFloat = 5 {
-    didSet {
-      self.animationDuration = workTime
-    }
-  }
-  
-  @Published var animationDuration: CGFloat = 5.0 {
-    willSet {
-      self.time = newValue.timeFormattedToString()
-    }
-  }
+  @Published var workTime: CGFloat = 5
+  @Published var animationDuration: CGFloat = 5.0
   
   var countdownTimer: Timer!
   var isReadingExecuted = false
@@ -37,6 +27,12 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
   var startSessionDate: Date!
   var numberOfWorkIntervals: Int16?
   var singleWorkDuration: Int16?
+  
+  init() {
+    progressValue = CGFloat(UserDefaults.standard.float(forKey: .progressValueKey))
+    state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
+    storageManager.delegate = self
+  }
   
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
@@ -67,6 +63,7 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
       }
       
       self.modifyProgressValue(mathOperation: .subtraction)
+      self.time = self.animationDuration.timeFormattedToString()
     })
     RunLoop.current.add(countdownTimer!, forMode: .common)
   }
@@ -79,11 +76,11 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
       guard self.animationDuration < self.workTime else {
         self.countdownTimer?.invalidate()
         self.startWorkCycle()
-        
         return
       }
       
       self.modifyProgressValue(mathOperation: .addition)
+      self.time = (self.workTime - self.animationDuration).timeFormattedToString()
       if self.progressValue > 0.999 {
         self.progressValue = 1.0
       }
@@ -133,10 +130,8 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
     storageManager.saveToCoreData()
   }
   
-  init() {
-    progressValue = CGFloat(UserDefaults.standard.float(forKey: .progressValueKey))
-    state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
-    storageManager.delegate = self
+  internal func setWorkTime() {
+    animationDuration = workTime
   }
   
   internal func modifyProgressValue(mathOperation: MathOperationType) {
@@ -146,3 +141,4 @@ final class MainViewModel: ObservableObject, StorageManagerDelegate {
   }
 }
 
+extension MainViewModel: StorageManagerDelegate {}

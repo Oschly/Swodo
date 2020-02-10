@@ -55,9 +55,8 @@ struct SelectionView: View {
             self.viewModel.numberOfWorkIntervals = 5
             self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime)
             
+            self.viewModel.setWorkTime()
             self.viewModel.startWorkCycle()
-            self.viewModel.progressValue = 1.0
-            self.viewModel.animationDuration = self.viewModel.workTime
           }
         }
         Spacer()
