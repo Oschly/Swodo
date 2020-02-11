@@ -33,12 +33,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     mainViewModel.saveSession()
   }
 
+  func sceneDidDisconnect(_ scene: UIScene) {
+    mainViewModel.saveSession()
+  }
+  
+  
+
   func sceneWillEnterForeground(_ scene: UIScene) {
     mainViewModel.readUnfinishedSession()
   }
   
   func sceneDidEnterBackground(_ scene: UIScene) {
-    
+    mainViewModel.saveSession()
     // Save state and data
     (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
   }

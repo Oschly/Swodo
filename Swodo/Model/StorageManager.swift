@@ -12,7 +12,6 @@ import CoreData
 
 protocol StorageManagerDelegate: ProgressDataDelegate {
   var context: NSManagedObjectContext? { get set }
-  var isReadingExecuted: Bool { get set }
 }
 
 protocol ProgressDataDelegate {
@@ -27,18 +26,20 @@ protocol ProgressDataDelegate {
 }
 
 final class StorageManager {
-  private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .background)
+  private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .userInteractive)
   private let userDefaults = UserDefaults.standard
   
   var delegate: StorageManagerDelegate?
+  private var isReadingExecuting = false
 }
 
 // MARK: - UserDefaults methods
 extension StorageManager {
   func saveSession() {
-    delegate?.isReadingExecuted = false
+    isReadingExecuting = false
     
-    userDefaultsQueue.async { [unowned self] in
+    userDefaultsQueue.async { [weak self] in
+      guard let self = self else { return }
       self.userDefaults.set(self.delegate?.state.rawValue, forKey: .stateKey)
       self.userDefaults.set(self.delegate?.progressValue, forKey: .progressValueKey)
       self.userDefaults.set(self.delegate?.numberOfSessions, forKey: .numberOfSessionsKey)
@@ -49,39 +50,61 @@ extension StorageManager {
   }
   
   func readUnfinishedSession() {
-    guard !(delegate?.isReadingExecuted ?? true) else { return }
-    delegate?.isReadingExecuted = true
+    guard var delegate = delegate else { return }
     
-    if delegate?.state == .notStarted {
-      delegate?.progressValue = 1.0
+    // Check if isn't already there another process of saving data
+    guard !isReadingExecuting else { return }
+    isReadingExecuting = true
+    
+    // Safety-check if user entered the app that has ended session
+    if delegate.state == .notStarted {
+      delegate.progressValue = 1.0
       return
     }
     
+    // Set default value key for 5 minutes (lowest available)
     userDefaults.register(defaults: [.workTimeKey : 5])
     
+    // Calculate time between app's last exit and present re-launch
+    // (app doesn't have to be killed to execute that method).
+    //
+    // differenceBetweenDates uses negated value of exitDate, because
+    // any timeIntervalSinceNow used on past date will return negative value.
     let exitDate = userDefaults.value(forKey: .dateKey) as! Date
     var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
     
-    delegate?.workTime = CGFloat(userDefaults.integer(forKey: .workTimeKey))
-    delegate?.numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
+    // Read informations about last session from UserDefaults
+    delegate.workTime = CGFloat(userDefaults.integer(forKey: .workTimeKey))
+    delegate.numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
     
-    while differenceBetweenDates > delegate?.workTime ?? 0 {
-      if delegate?.numberOfSessions == 1 {
-        delegate?.state = .notStarted
-      }
+    // Calculate present session's state based on data of last exit and present launch
+    while differenceBetweenDates > delegate.workTime {
       
-      delegate?.numberOfSessions -= 1
-      differenceBetweenDates -= delegate?.workTime ?? 0
+      // If differeneceBetweenDates is bigger than workTime and numberOfSessions equals 1,
+      // there is no need to continue the loop, just set session as ended.
+      if delegate.numberOfSessions == 1 {
+        delegate.state = .notStarted
+      }
+      guard delegate.state != .notStarted else { return }
+      
+      delegate.numberOfSessions -= 1
+      differenceBetweenDates -= delegate.workTime
     }
     
+    // Read the data from last session, to calculate present state of progress Ring.
     let leftAnimationTime = CGFloat(userDefaults.float(forKey: .animationDurationKey))
-    delegate?.progressValue = CGFloat(userDefaults.float(forKey: .progressValueKey))
     
-    if delegate?.state == .workTime {
-      delegate?.animationDuration = leftAnimationTime - differenceBetweenDates
+    // animationDuration increases its value when is counting breaks' time and
+    // decreasing when counting works' time.
+    if delegate.state == .workTime {
+      delegate.animationDuration = leftAnimationTime - differenceBetweenDates
     } else {
-      delegate?.animationDuration = leftAnimationTime + differenceBetweenDates
+      delegate.animationDuration = leftAnimationTime + differenceBetweenDates
     }
+    
+    // Bring progress circle to present state
+    delegate.progressValue = delegate.animationDuration / delegate.workTime
+    isReadingExecuting = false
   }
 }
 
@@ -94,9 +117,8 @@ extension StorageManager {
         return
     }
     
-    let totalWork = workIntervals * singleWorkDuration + (workIntervals - 1)
-    
     guard let context = delegate?.context else { return }
+    let totalWork = workIntervals * singleWorkDuration + (workIntervals - 1)
     let session = Session(context: context)
     session.canceled = false
     session.endDate = Date()

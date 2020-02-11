@@ -15,21 +15,31 @@ final class MainViewModel: ObservableObject {
   private let storageManager = StorageManager()
   
   @Published var progressValue: CGFloat = 0
-  @Published var time = String()
+  @Published var time = String() {
+    willSet {
+      print(newValue)
+    }
+  }
   @Published var numberOfSessions = 1
   @Published var state: TimerState
   @Published var workTime: CGFloat = 5
-  @Published var animationDuration: CGFloat = 5.0
+  @Published var animationDuration: CGFloat = 5.0 {
+    willSet {
+      if state == .workTime {
+        time = newValue.timeFormattedToString()
+      } else if state == .breakTime {
+        time = (self.workTime - self.animationDuration).timeFormattedToString()
+      }
+    }
+  }
   
   var countdownTimer: Timer!
-  var isReadingExecuted = false
   
   var startSessionDate: Date!
   var numberOfWorkIntervals: Int16?
   var singleWorkDuration: Int16?
   
   init() {
-    progressValue = CGFloat(UserDefaults.standard.float(forKey: .progressValueKey))
     state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
     storageManager.delegate = self
   }
@@ -47,9 +57,11 @@ final class MainViewModel: ObservableObject {
         self.numberOfSessions -= 1
         
         if self.numberOfSessions > 0 {
+          // Start break cycle
           self.animationDuration = 0
           self.startBreakCycle()
         } else {
+          // End whole session
           self.saveToCoreData()
           self.animationDuration = 0
           
@@ -57,13 +69,13 @@ final class MainViewModel: ObservableObject {
           self.animationDuration = self.workTime
           self.progressValue = 1.0
           self.numberOfSessions = Int(self.numberOfWorkIntervals ?? 1)
+          self.numberOfWorkIntervals = nil
         }
         return
         
       }
       
       self.modifyProgressValue(mathOperation: .subtraction)
-      self.time = self.animationDuration.timeFormattedToString()
     })
     RunLoop.current.add(countdownTimer!, forMode: .common)
   }
@@ -80,7 +92,6 @@ final class MainViewModel: ObservableObject {
       }
       
       self.modifyProgressValue(mathOperation: .addition)
-      self.time = (self.workTime - self.animationDuration).timeFormattedToString()
       if self.progressValue > 0.999 {
         self.progressValue = 1.0
       }
@@ -93,7 +104,6 @@ final class MainViewModel: ObservableObject {
     countdownTimer?.invalidate()
     state = .stopped
     progressValue = 1.0
-    
     animationDuration = workTime
   }
   
