@@ -8,6 +8,8 @@
 
 import CoreGraphics
 
+// Gives more readability in calculating Progress Circle's fill,
+// even though it's more lines.
 enum MathOperationType {
   case addition
   case subtraction

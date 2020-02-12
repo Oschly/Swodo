@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    let mainView = TabBarView(mainViewModel: mainViewModel)
+    let mainView = TabBarView()
       .environment(\.managedObjectContext, context)
       .environmentObject(mainViewModel)
 
@@ -36,8 +36,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   func sceneDidDisconnect(_ scene: UIScene) {
     mainViewModel.saveSession()
   }
-  
-  
 
   func sceneWillEnterForeground(_ scene: UIScene) {
     mainViewModel.readUnfinishedSession()

@@ -10,66 +10,68 @@ import Foundation
 import CoreGraphics
 import CoreData
 
+// I didn't find any other way to request given for SwiftUI
+// views Core Data's context. It allows to operate on same context
+// through whole app.
 protocol StorageManagerDelegate: ProgressDataDelegate {
   var context: NSManagedObjectContext? { get set }
 }
 
-protocol ProgressDataDelegate {
-  var numberOfWorkIntervals: Int16? { get set }
-  var animationDuration: CGFloat { get set }
-  var progressValue: CGFloat { get set }
-  var numberOfSessions: Int { get set }
-  var state: TimerState { get set }
-  var workTime: CGFloat { get set }
-  var singleWorkDuration: Int16? { get set }
-  var startSessionDate: Date! { get set }
-}
-
 final class StorageManager {
+  
+  // Queue for saving data.
   private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .userInteractive)
   private let userDefaults = UserDefaults.standard
   
+  // delegate allows code to do it own job here (saving, reading, etc.) and
+  // give required data to classes and structs which need that data to work.
   var delegate: StorageManagerDelegate?
+  
+  // A value which indicates if is any saving/reading method already running.
+  // It helps to prevent running multiple tries to save data what can
+  // be problematic in complex situations.
   private var isReadingExecuting = false
 }
 
 // MARK: - UserDefaults methods
 extension StorageManager {
   func saveSession() {
-    isReadingExecuting = false
+    isReadingExecuting = true
     
+    // Execute that not on main thread to prevent system's hangs on app's exit
     userDefaultsQueue.async { [weak self] in
-      guard let self = self else { return }
-      self.userDefaults.set(self.delegate?.state.rawValue, forKey: .stateKey)
-      self.userDefaults.set(self.delegate?.progressValue, forKey: .progressValueKey)
-      self.userDefaults.set(self.delegate?.numberOfSessions, forKey: .numberOfSessionsKey)
-      self.userDefaults.set(self.delegate?.workTime, forKey: .workTimeKey)
-      self.userDefaults.set(self.delegate?.animationDuration, forKey: .animationDurationKey)
+      guard let self = self,
+        let delegate = self.delegate
+        else { return }
+      
+      self.userDefaults.set(delegate.state.rawValue, forKey: .stateKey)
+      self.userDefaults.set(delegate.progressValue, forKey: .progressValueKey)
+      self.userDefaults.set(delegate.numberOfSessions, forKey: .numberOfSessionsKey)
+      self.userDefaults.set(delegate.workTime, forKey: .workTimeKey)
+      self.userDefaults.set(delegate.animationDuration, forKey: .animationDurationKey)
       self.userDefaults.set(Date(), forKey: .dateKey)
     }
   }
   
   func readUnfinishedSession() {
-    guard var delegate = delegate else { return }
     
     // Check if isn't already there another process of saving data
-    guard !isReadingExecuting else { return }
+    // or any other case that this method shouldn't be executed now
+    guard !isReadingExecuting,
+      var delegate = delegate,
+      delegate.state != .notStarted
+      else { return }
     isReadingExecuting = true
     
-    // Safety-check if user entered the app that has ended session
-    if delegate.state == .notStarted {
-      delegate.progressValue = 1.0
-      return
-    }
-    
     // Set default value key for 5 minutes (lowest available)
-    userDefaults.register(defaults: [.workTimeKey : 5])
+    // in case of absence of value for .workTimeKey
+    userDefaults.register(defaults: [.workTimeKey: 5])
     
     // Calculate time between app's last exit and present re-launch
     // (app doesn't have to be killed to execute that method).
     //
     // differenceBetweenDates uses negated value of exitDate, because
-    // any timeIntervalSinceNow used on past date will return negative value.
+    // any timeIntervalSinceNow used on past date returns negative value.
     let exitDate = userDefaults.value(forKey: .dateKey) as! Date
     var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
     
@@ -117,7 +119,13 @@ extension StorageManager {
         return
     }
     
+    // 1. Check if context is present (it always should be, but
+    // anything can happen.
+    //
+    // 2. Fill all missing data, because in any other places it
+    // isn't necessary
     guard let context = delegate?.context else { return }
+    #warning("canceled and singleBreakDuration are set to constant value!")
     let totalWork = workIntervals * singleWorkDuration + (workIntervals - 1)
     let session = Session(context: context)
     session.canceled = false
@@ -129,6 +137,12 @@ extension StorageManager {
     session.totalWorkDuration = totalWork
     session.singleWorkDuration = singleWorkDuration
     
-    try? delegate?.context!.save()
+    do {
+      guard let context = delegate?.context else { throw ErrorType.UnwrappingContextError }
+      try context.save()
+    } catch {
+      // TODO: - Some nice Error handling here
+      print(error)
+    }
   }
 }

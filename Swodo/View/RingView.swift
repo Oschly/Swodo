@@ -11,10 +11,14 @@ import SwiftUI
 struct RingView: View {
   @EnvironmentObject var viewModel: MainViewModel
   
+  
+  // TODO: - move that view to center of the screen.
   var body: some View {
     GeometryReader { geometry in
       VStack {
         ZStack {
+          // Background circle which marks
+          // circle's below that path that it went.
           Circle()
             .stroke(lineWidth: 10.0)
             .opacity(0.05)

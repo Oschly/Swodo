@@ -12,6 +12,8 @@ struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
   @Environment(\.managedObjectContext) var moc
 
+  // Values for Picker view, easier for later calculations
+  // than multiplying values from 1 to 20 by 5
   let workTimeValues = stride(from: 5.cgfloat(),
                               to: 121.cgfloat(),
                               by: 5.cgfloat())
@@ -19,6 +21,11 @@ struct SelectionView: View {
   var body: some View {
     GeometryReader { geometry in
       VStack {
+        // View's bounds are merged together so it
+        // looks like these two pickers are single view
+        //
+        // TODO: - Make these views as custom structs with separated
+        // code from that struct
         HStack(spacing: 0) {
           VStack {
             Picker(selection: self.$viewModel.workTime, label: Text("")) {
@@ -50,9 +57,11 @@ struct SelectionView: View {
         
         HStack(spacing: 80) {
           Button("Start") {
+            // TODO: - Move it to viewModel as new method.
+            self.viewModel.progressValue = 1.0
             self.viewModel.setupContext(self.moc)
             self.viewModel.startSessionDate = Date()
-            self.viewModel.numberOfWorkIntervals = 5
+            self.viewModel.numberOfWorkIntervals = Int16(self.viewModel.numberOfSessions)
             self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime)
             
             self.viewModel.setWorkTime()

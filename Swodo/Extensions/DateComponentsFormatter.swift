@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Helps in method inside Numbers+.swift with
+// converting CGFloats to time values.
 extension DateComponentsFormatter {
   static var viewTimeFormatter: DateComponentsFormatter {
     let tempFormatter = DateComponentsFormatter()

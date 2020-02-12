@@ -15,11 +15,7 @@ final class MainViewModel: ObservableObject {
   private let storageManager = StorageManager()
   
   @Published var progressValue: CGFloat = 0
-  @Published var time = String() {
-    willSet {
-      print(newValue)
-    }
-  }
+  @Published var time = String()
   @Published var numberOfSessions = 1
   @Published var state: TimerState
   @Published var workTime: CGFloat = 5
@@ -34,7 +30,6 @@ final class MainViewModel: ObservableObject {
   }
   
   var countdownTimer: Timer!
-  
   var startSessionDate: Date!
   var numberOfWorkIntervals: Int16?
   var singleWorkDuration: Int16?
@@ -67,7 +62,6 @@ final class MainViewModel: ObservableObject {
           
           self.state = .notStarted
           self.animationDuration = self.workTime
-          self.progressValue = 1.0
           self.numberOfSessions = Int(self.numberOfWorkIntervals ?? 1)
           self.numberOfWorkIntervals = nil
         }
