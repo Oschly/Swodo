@@ -10,7 +10,6 @@
 import Foundation
 import CoreData
 
-
 extension Session {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Session> {
@@ -25,5 +24,4 @@ extension Session {
     @NSManaged public var singleWorkDuration: Int16
     @NSManaged public var startDate: Date?
     @NSManaged public var totalWorkDuration: Int16
-
 }

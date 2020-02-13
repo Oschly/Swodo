@@ -19,13 +19,14 @@ class StorageManagerTests: XCTestCase {
   }
   
   override func tearDown() {
+    sut.delegate = nil
     sut = nil
     super.tearDown()
   }
   
   // MARK: - Given
   func setupDelegate() {
-    sut.delegate = MainViewModel()
+    sut.delegate = StorageManagerDelegateMock()
   }
   
   // MARK: - Initialization
@@ -33,5 +34,17 @@ class StorageManagerTests: XCTestCase {
   func testStorageManager_afterInitialize_isDelegateNil() {
     let delegate = sut.delegate
     XCTAssertNil(delegate, "Delegate on initialize isn't nil!")
+  }
+  
+  func testSavingToUserDefaults() {
+    // given
+    setupDelegate()
+    let exp = expectation(forNotification: .debugDefaultsValue, object: nil)
+    
+    // when
+    sut.saveSession()
+
+    // then
+    wait(for: [exp], timeout: 1)
   }
 }

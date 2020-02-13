@@ -19,8 +19,9 @@ protocol StorageManagerDelegate: ProgressDataDelegate {
 
 final class StorageManager {
   
-  // Queue for saving data.
+  // Queues for saving and removing data.
   private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .userInteractive)
+  private let userDefaultsBackgroundQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsBackgroundTask", qos: .background)
   private let userDefaults = UserDefaults.standard
   
   // delegate allows code to do it own job here (saving, reading, etc.) and
@@ -50,6 +51,11 @@ extension StorageManager {
       self.userDefaults.set(delegate.workTime, forKey: .workTimeKey)
       self.userDefaults.set(delegate.animationDuration, forKey: .animationDurationKey)
       self.userDefaults.set(Date(), forKey: .dateKey)
+      
+      #if DEBUG
+      let notification = Notification(name: .debugDefaultsValue, object: nil)
+      NotificationCenter.default.post(notification)
+      #endif
     }
   }
   
@@ -72,7 +78,7 @@ extension StorageManager {
     //
     // differenceBetweenDates uses negated value of exitDate, because
     // any timeIntervalSinceNow used on past date returns negative value.
-    let exitDate = userDefaults.value(forKey: .dateKey) as! Date
+    guard let exitDate = userDefaults.value(forKey: .dateKey) as? Date else { return }
     var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
     
     // Read informations about last session from UserDefaults
@@ -106,7 +112,20 @@ extension StorageManager {
     
     // Bring progress circle to present state
     delegate.progressValue = delegate.animationDuration / delegate.workTime
+    clearSessionUserDefaults()
     isReadingExecuting = false
+  }
+  
+  internal func clearSessionUserDefaults() {
+    userDefaultsBackgroundQueue.async { [weak self] in
+      guard let self = self else { return }
+      let keys: [String] = [.stateKey, .progressValueKey, .numberOfSessionsKey,
+                            .workTimeKey, .animationDurationKey, .dateKey]
+      
+      for key in keys {
+        self.userDefaults.removeObject(forKey: key)
+      }
+    }
   }
 }
 
@@ -146,3 +165,5 @@ extension StorageManager {
     }
   }
 }
+
+
