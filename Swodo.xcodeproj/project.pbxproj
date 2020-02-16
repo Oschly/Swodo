@@ -12,6 +12,8 @@
 		470E2CBA23EEE39100591E4C /* Numbers+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E2CB923EEE39100591E4C /* Numbers+.swift */; };
 		470E2CBC23EEEF5400591E4C /* DateComponentsFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */; };
 		4715A98023F06B4F00B8E124 /* MathOperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4715A97F23F06B4F00B8E124 /* MathOperationType.swift */; };
+		4729089523F924B900AEC0EF /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4729089423F924B900AEC0EF /* CellView.swift */; };
+		4729089723F9257700AEC0EF /* SelectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4729089623F9257700AEC0EF /* SelectionViewTests.swift */; };
 		472AE8BC23DCD2A100FA95A8 /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */; };
 		472CCC8823F454500071D008 /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8723F454500071D008 /* ErrorType.swift */; };
 		472CCC8A23F4549D0071D008 /* ProgressDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */; };
@@ -58,6 +60,8 @@
 		470E2CB923EEE39100591E4C /* Numbers+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Numbers+.swift"; sourceTree = "<group>"; };
 		470E2CBB23EEEF5400591E4C /* DateComponentsFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateComponentsFormatter.swift; sourceTree = "<group>"; };
 		4715A97F23F06B4F00B8E124 /* MathOperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathOperationType.swift; sourceTree = "<group>"; };
+		4729089423F924B900AEC0EF /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
+		4729089623F9257700AEC0EF /* SelectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionViewTests.swift; sourceTree = "<group>"; };
 		472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 		472CCC8723F454500071D008 /* ErrorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
 		472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDataDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +129,7 @@
 				478AF9B3239AD42800B9EABA /* SelectionView.swift */,
 				478AF9B5239AD48A00B9EABA /* RingView.swift */,
 				4703A62C23BDEC5800976C26 /* HistoryView.swift */,
+				4729089423F924B900AEC0EF /* CellView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -254,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				7565FE29233093D7006A97EA /* Info.plist */,
+				4729089623F9257700AEC0EF /* SelectionViewTests.swift */,
 			);
 			path = SwodoUITests;
 			sourceTree = "<group>";
@@ -333,6 +339,7 @@
 					};
 					7565FE22233093D7006A97EA = {
 						CreatedOnToolsVersion = 11.0;
+						LastSwiftMigration = 1130;
 						TestTargetID = 7565FDFE233093D5006A97EA;
 					};
 				};
@@ -405,6 +412,7 @@
 				472CCC8823F454500071D008 /* ErrorType.swift in Sources */,
 				04DA25E52330BF31005193E7 /* MainViewModel.swift in Sources */,
 				47F314D723D39CB200503014 /* StorageManager.swift in Sources */,
+				4729089523F924B900AEC0EF /* CellView.swift in Sources */,
 				478AF9B4239AD42800B9EABA /* SelectionView.swift in Sources */,
 				470E2CBC23EEEF5400591E4C /* DateComponentsFormatter.swift in Sources */,
 				47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */,
@@ -426,6 +434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4729089723F9257700AEC0EF /* SelectionViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,6 +669,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SwodoUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -669,6 +679,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.oschly.SwodoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Swodo;
@@ -679,6 +690,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SwodoUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

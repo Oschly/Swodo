@@ -17,15 +17,15 @@ struct HistoryView: View {
   var body: some View {
     NavigationView {
       List(sessions, id: \.self) { session in
-        Text(String(session.singleWorkDuration))
+        CellView(session: session)
+          .frame(height: 100)
       }
       .navigationBarTitle("Statistics")
     }
   }
-}
-
-struct HistoryView_Previews: PreviewProvider {
-  static var previews: some View {
-    HistoryView()
+  
+  init() {
+    // Hide separator between cells
+    UITableView.appearance().separatorColor = .clear
   }
 }

@@ -57,10 +57,10 @@ final class MainViewModel: ObservableObject {
           self.startBreakCycle()
         } else {
           // End whole session
+          self.state = .notStarted
           self.saveToCoreData()
           self.animationDuration = 0
           
-          self.state = .notStarted
           self.animationDuration = self.workTime
           self.numberOfSessions = Int(self.numberOfWorkIntervals ?? 1)
           self.numberOfWorkIntervals = nil
