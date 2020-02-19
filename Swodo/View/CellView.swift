@@ -12,7 +12,7 @@ struct CellView: View {
   let session: Session
   
   private var formattedStartDateString: String {
-    guard let date = session.startDate else { return "" }
+    guard let date = session.endDate else { return "" }
     let formatter = RelativeDateTimeFormatter()
     formatter.unitsStyle = .abbreviated // To be considered
     

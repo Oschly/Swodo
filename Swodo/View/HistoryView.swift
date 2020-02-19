@@ -16,12 +16,16 @@ struct HistoryView: View {
   // TODO: - Make own view for cells.
   var body: some View {
     NavigationView {
-      List(sessions, id: \.self) { session in
-        CellView(session: session)
-          .frame(height: 100)
+      NavigationLink(destination: Text("O tu jestem!")) {
+        List(sessions) { session in
+          CellView(session: session)
+            .frame(height: 100)
+        }
       }
+      .buttonStyle(PlainButtonStyle())
       .navigationBarTitle("Statistics")
     }
+    .navigationViewStyle(StackNavigationViewStyle())
   }
   
   init() {
