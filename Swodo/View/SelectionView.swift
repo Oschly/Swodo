@@ -11,7 +11,7 @@ import SwiftUI
 struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
   @Environment(\.managedObjectContext) var moc
-
+  
   // Values for Picker view, easier for later calculations
   // than multiplying values from 1 to 20 by 5
   let workTimeValues = stride(from: 5.cgfloat(),
@@ -32,7 +32,8 @@ struct SelectionView: View {
               ForEach(Array(self.workTimeValues), id: \.self) { index in
                 Text(index.humanReadable() + " Minutes")
               }
-            }.frame(maxWidth: geometry.size.width / 2,
+            }
+            .frame(maxWidth: geometry.size.width / 2,
                     maxHeight: 74)
               .clipped()
               .labelsHidden()
@@ -47,13 +48,19 @@ struct SelectionView: View {
                     }
             }
             .frame(maxWidth: geometry.size.width / 2,
-                    maxHeight: 74)
+                   maxHeight: 74)
               .clipped()
               .labelsHidden()
             Text("Number of sessions")
           }
         }
-        .padding(geometry.size.height * 0.1)
+        .padding(.top, geometry.size.height * 0.1)
+        .padding(.bottom, geometry.size.height * 0.05)
+        
+        TextField("What do you plan to work on?", text: self.$viewModel.sessionTitle)
+          .multilineTextAlignment(.center)
+          .textFieldStyle(RoundedBorderTextFieldStyle())
+          .frame(width: geometry.size.width * 0.8, alignment: .center)
         
         HStack(spacing: 80) {
           Button("Start") {
@@ -67,6 +74,7 @@ struct SelectionView: View {
             self.viewModel.setWorkTime()
             self.viewModel.startWorkCycle()
           }
+          .disabled(self.viewModel.sessionTitle.isEmpty)
         }
         Spacer()
       }
@@ -74,3 +82,26 @@ struct SelectionView: View {
   }
 }
 
+#if DEBUG
+
+struct SelectionView_Previews: PreviewProvider {
+  static let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+  
+  static var previews: some View {
+    Group {
+    SelectionView()
+      .environmentObject(MainViewModel())
+      .previewDevice(PreviewDevice(rawValue: "iPhone SE"))
+      
+      SelectionView()
+        .environmentObject(MainViewModel())
+        .previewDevice("iPad8,1")
+      
+      SelectionView()
+        .environmentObject(MainViewModel())
+        .previewDevice("iPhone 11 Pro Max")
+    }
+  }
+}
+
+#endif

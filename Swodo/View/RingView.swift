@@ -42,6 +42,10 @@ struct RingView: View {
             .fontWeight(.heavy)
         }
         
+        Text(self.viewModel.sessionTitle)
+          .fontWeight(.bold)
+          .multilineTextAlignment(.center)
+        
         Spacer()
         HStack() {
           Button("Stop") {
@@ -54,4 +58,14 @@ struct RingView: View {
   }
 }
 
+#if DEBUG
 
+struct RingView_Previews: PreviewProvider {  
+  static var previews: some View {
+    RingView()
+    .environmentObject(MainViewModel(time: "1:00",
+                                     sessionTitle: "Doing some ultra very advanced stuff that nobody can't do except me."))
+  }
+}
+
+#endif

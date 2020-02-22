@@ -28,10 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
     }
   }
-  
-  func sceneWillResignActive(_ scene: UIScene) {
-    mainViewModel.saveSession()
-  }
 
   func sceneDidDisconnect(_ scene: UIScene) {
     mainViewModel.saveSession()

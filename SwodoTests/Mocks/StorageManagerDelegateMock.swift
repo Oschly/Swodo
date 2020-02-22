@@ -11,7 +11,7 @@ import CoreData
 @testable import Swodo
 
 class StorageManagerDelegateMock: StorageManagerDelegate {
-  var context: NSManagedObjectContext? = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+  var context: NSManagedObjectContext? = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
   var numberOfWorkIntervals: Int16? = 5
   
@@ -29,5 +29,5 @@ class StorageManagerDelegateMock: StorageManagerDelegate {
   
   var startSessionDate: Date! = Date()
   
-  
+  var sessionTitle: String = "Hello Tests!"
 }

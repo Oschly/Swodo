@@ -14,8 +14,9 @@ final class MainViewModel: ObservableObject {
   internal var context: NSManagedObjectContext?
   private let storageManager = StorageManager()
   
-  @Published var progressValue: CGFloat = 0
+  @Published var progressValue: CGFloat = 1.0
   @Published var time = String()
+  @Published var sessionTitle = String()
   @Published var numberOfSessions = 1
   @Published var state: TimerState
   @Published var workTime: CGFloat = 5
@@ -38,6 +39,20 @@ final class MainViewModel: ObservableObject {
     state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
     storageManager.delegate = self
   }
+  
+  #if DEBUG
+  convenience init(time: String = "0:01", sessionTitle: String = "Doing stuff", numberOfSessions: Int = 1, state: TimerState = .notStarted, animationDuration: CGFloat = 5, workTime: CGFloat = 5, progressValue: CGFloat = 1) {
+    self.init()
+    
+    self.time = time
+    self.sessionTitle = sessionTitle
+    self.numberOfSessions = numberOfSessions
+    self.state = state
+    self.animationDuration = animationDuration
+    self.workTime = workTime
+    self.progressValue = progressValue
+  }
+  #endif
   
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
@@ -131,7 +146,7 @@ final class MainViewModel: ObservableObject {
   }
   
   internal func saveToCoreData() {
-    storageManager.saveToCoreData()
+    storageManager.saveToCoreData(isSessionCanceled: false)
   }
   
   internal func setWorkTime() {

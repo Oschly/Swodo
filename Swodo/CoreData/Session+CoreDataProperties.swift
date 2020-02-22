@@ -24,4 +24,5 @@ extension Session {
     @NSManaged public var singleWorkDuration: Int16
     @NSManaged public var startDate: Date?
     @NSManaged public var totalWorkDuration: Int16
+    @NSManaged public var title: String
 }

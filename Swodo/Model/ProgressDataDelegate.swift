@@ -21,4 +21,5 @@ protocol ProgressDataDelegate {
   var workTime: CGFloat { get set }
   var singleWorkDuration: Int16? { get set }
   var startSessionDate: Date! { get set }
+  var sessionTitle: String { get set }
 }

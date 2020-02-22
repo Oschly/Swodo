@@ -14,4 +14,5 @@ extension String {
   static let stateKey = "timerState"
   static let timerState = "timerState"
   static let progressValueKey = "progressValue"
+  static let sessionTitleKey = "sessionTitle"
 }

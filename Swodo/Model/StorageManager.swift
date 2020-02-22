@@ -31,13 +31,13 @@ final class StorageManager {
   // A value which indicates if is any saving/reading method already running.
   // It helps to prevent running multiple tries to save data what can
   // be problematic in complex situations.
-  private var isReadingExecuting = false
+  private var isUsingDisk = false
 }
 
 // MARK: - UserDefaults methods
 extension StorageManager {
   func saveSession() {
-    isReadingExecuting = true
+    isUsingDisk = true
     
     // Execute that not on main thread to prevent system's hangs on app's exit
     userDefaultsQueue.async { [weak self] in
@@ -51,23 +51,26 @@ extension StorageManager {
       self.userDefaults.set(delegate.workTime, forKey: .workTimeKey)
       self.userDefaults.set(delegate.animationDuration, forKey: .animationDurationKey)
       self.userDefaults.set(Date(), forKey: .dateKey)
+      self.userDefaults.set(delegate.sessionTitle, forKey: .sessionTitleKey)
       
       #if DEBUG
       let notification = Notification(name: .debugDefaultsValue, object: nil)
       NotificationCenter.default.post(notification)
       #endif
     }
+    
+    isUsingDisk = false
   }
   
   func readUnfinishedSession() {
     
     // Check if isn't already there another process of saving data
     // or any other case that this method shouldn't be executed now
-    guard !isReadingExecuting,
+    guard !isUsingDisk,
       var delegate = delegate,
       delegate.state != .notStarted
       else { return }
-    isReadingExecuting = true
+    isUsingDisk = true
     
     // Set default value key for 5 minutes (lowest available)
     // in case of absence of value for .workTimeKey
@@ -112,8 +115,12 @@ extension StorageManager {
     
     // Bring progress circle to present state
     delegate.progressValue = delegate.animationDuration / delegate.workTime
+    delegate.sessionTitle = userDefaults.string(forKey: .sessionTitleKey) ?? ""
+    print("Duration: ", delegate.animationDuration)
+    print("workTime: ", delegate.workTime)
+    print("progressValue: ", delegate.progressValue)
     clearSessionUserDefaults()
-    isReadingExecuting = false
+    isUsingDisk = false
   }
   
   internal func clearSessionUserDefaults() {
@@ -132,7 +139,7 @@ extension StorageManager {
 
 // MARK: - Core Data methods
 extension StorageManager {
-  func saveToCoreData() {
+  func saveToCoreData(isSessionCanceled canceled: Bool) {
     guard let workIntervals = delegate?.numberOfWorkIntervals,
       let singleWorkDuration = delegate?.singleWorkDuration else {
         return
@@ -143,21 +150,24 @@ extension StorageManager {
     //
     // 2. Fill all missing data, because in any other places it
     // isn't necessary
-    guard let context = delegate?.context else { return }
+    guard let context = delegate?.context,
+      let delegate = delegate
+      else { return }
     #warning("canceled and singleBreakDuration are set to constant value!")
     let totalWork = workIntervals * singleWorkDuration + (workIntervals - 1)
     let session = Session(context: context)
-    session.canceled = false
+    session.canceled = canceled
     session.endDate = Date()
     session.id = UUID()
     session.numberOfWorkIntervals = workIntervals
     session.singleBreakDuration = 5
-    session.startDate = delegate?.startSessionDate
+    session.startDate = delegate.startSessionDate
     session.totalWorkDuration = totalWork
     session.singleWorkDuration = singleWorkDuration
+    session.title = delegate.sessionTitle
     
     do {
-      guard let context = delegate?.context else { throw ErrorType.UnwrappingContextError }
+      guard let context = delegate.context else { throw ErrorType.UnwrappingContextError }
       try context.save()
     } catch {
       // TODO: - Some nice Error handling here

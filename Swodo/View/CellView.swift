@@ -11,6 +11,8 @@ import SwiftUI
 struct CellView: View {
   let session: Session
   
+  @State private var presentingDetails = false
+  
   private var formattedStartDateString: String {
     guard let date = session.endDate else { return "" }
     let formatter = RelativeDateTimeFormatter()
@@ -30,7 +32,7 @@ struct CellView: View {
           .shadow(radius: 10)
         HStack {
           VStack {
-            Text(formattedStartDateString)
+            Text(self.session.title)
               .font(.title)
               .offset(x: 15, y: 5)
             Spacer()
@@ -45,6 +47,12 @@ struct CellView: View {
           }
         }
       }
+      .sheet(isPresented: $presentingDetails, content: {
+        DetailView(session: self.session)
+      })
+      .onTapGesture {
+        self.presentingDetails = true
+      }
       Spacer()
     }
   }
@@ -53,16 +61,8 @@ struct CellView: View {
 #if DEBUG
 struct CellView_Previews: PreviewProvider {
   static private var session: Session {
-    let session = Session()
-    session.canceled = false
-    session.endDate = Date()
-    session.startDate = Date().addingTimeInterval(-2000)
-    session.id = UUID()
-    session.numberOfWorkIntervals = 20
-    session.singleBreakDuration = 10
-    session.singleWorkDuration = 20
-    session.totalWorkDuration = 590
-    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let session = Session(context: context)
     return session
   }
   
