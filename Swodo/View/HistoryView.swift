@@ -16,19 +16,33 @@ struct HistoryView: View {
   // TODO: - Make own view for cells.
   var body: some View {
     NavigationView {
-        List(sessions) { session in
-          CellView(session: session)
-            .frame(height: 100)
-        }
+      List(sessions) { session in
+        CellView(session: session)
+          .frame(height: 100)
+      }
       .buttonStyle(PlainButtonStyle())
       .navigationBarTitle("Statistics")
     }
     .navigationViewStyle(StackNavigationViewStyle())
   }
+}
+
+#if DEBUG
+import CoreData
+
+struct HistoryView_Preview: PreviewProvider {
+  static var context: NSManagedObjectContext {
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    let entry = Session(context: context)
+    
+    return context
+  }
   
-  init() {
-    // Hide separator between cells
-    UITableView.appearance().separatorColor = .clear
+  static var previews: some View {
+    HistoryView()
+      .environment(\.managedObjectContext, context)
   }
 }
 
+#endif

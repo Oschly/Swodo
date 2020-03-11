@@ -10,15 +10,27 @@ import SwiftUI
 
 struct DetailView: View {
   let session: Session
+  
+  private var formattedDateString: String {
+    guard let date = session.startDate else { return "" }
+    let formatter = DateFormatter()
+    formatter.dateStyle = .long
+    
+    return formatter.string(from: date)
+  }
+  
   var body: some View {
     NavigationView {
       Form {
         Section {
-          Text("Hello")
+          SimpleCell(title: "Title", value: session.title)
+          SimpleCell(title: "Date", value: formattedDateString)
         }
+        
       }
-      .navigationBarTitle(session.title)
+      .navigationBarTitle("Session")
     }
+    .navigationViewStyle(DefaultNavigationViewStyle())
   }
 }
 

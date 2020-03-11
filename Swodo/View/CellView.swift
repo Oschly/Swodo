@@ -14,7 +14,7 @@ struct CellView: View {
   @State private var presentingDetails = false
   
   private var formattedStartDateString: String {
-    guard let date = session.endDate else { return "" }
+    guard let date = session.startDate else { return "" }
     let formatter = RelativeDateTimeFormatter()
     formatter.unitsStyle = .abbreviated // To be considered
     
@@ -23,38 +23,46 @@ struct CellView: View {
     return relativeDate
   }
   
+  private var formattedNumberOfIntervals: String {
+    var text = String()
+    let intervals = session.numberOfWorkIntervals
+    
+    if intervals > 1 {
+      text = "\(intervals) intervals"
+    } else {
+      text = "\(intervals) interval"
+    }
+    
+    return text
+  }
+  
   var body: some View {
     VStack {
-      Spacer()
-      ZStack {
-        RoundedRectangle(cornerRadius: 20)
-          .foregroundColor(.white)
-          .shadow(radius: 10)
-        HStack {
-          VStack {
-            Text(self.session.title)
-              .font(.title)
-              .offset(x: 15, y: 5)
-            Spacer()
-            Text("Subtext")
-              .font(.subheadline)
-            .offset(x: 10, y: -10)
-          }
-          Spacer()
-          VStack {
-            Text("Coś")
-            .offset(x: -20, y: 0)
-          }
-        }
+      HStack {
+        Text(self.session.title)
+          .bold()
+          .font(.system(size: 18))
+          .offset(x: 0, y: 3)
+        
+        Spacer()
       }
-      .sheet(isPresented: $presentingDetails, content: {
-        DetailView(session: self.session)
-      })
+      Spacer()
+      HStack {
+        Text(formattedStartDateString)
+          .offset(x: 0, y: -10)
+        
+        Spacer()
+        Text(formattedNumberOfIntervals)
+          .offset(x: 0, y: -10)
+      }
+    }
+    .sheet(isPresented: $presentingDetails, content: {
+      DetailView(session: self.session)
+    })
       .onTapGesture {
         self.presentingDetails = true
-      }
-      Spacer()
     }
+    
   }
 }
 
