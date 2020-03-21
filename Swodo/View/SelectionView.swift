@@ -63,7 +63,7 @@ struct SelectionView: View {
           .frame(width: geometry.size.width * 0.8, alignment: .center)
         
         HStack(spacing: 80) {
-          Button("Start") {
+          ActionButton(title: self.viewModel.state.buttonTitle()) {
             // TODO: - Move it to viewModel as new method.
             self.viewModel.progressValue = 1.0
             self.viewModel.setupContext(self.moc)
@@ -76,6 +76,7 @@ struct SelectionView: View {
           }
           .disabled(self.viewModel.sessionTitle.isEmpty)
         }
+        .padding(40)
         Spacer()
       }
     }

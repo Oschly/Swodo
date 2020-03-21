@@ -33,8 +33,8 @@ struct RingView: View {
             .frame(width: geometry.size.width * 0.8,
                    height: geometry.size.height / 3)
             .padding(geometry.size.height * 0.05)
-          .rotationEffect(.degrees(-90))
-
+            .rotationEffect(.degrees(-90))
+          
           
           Text(self.viewModel.time)
             .font(.largeTitle)
@@ -48,7 +48,7 @@ struct RingView: View {
         
         Spacer()
         HStack() {
-          Button("Stop") {
+          ActionButton(title: self.viewModel.state.buttonTitle()) {
             self.viewModel.stopWorkSession()
           }
         }
@@ -63,8 +63,8 @@ struct RingView: View {
 struct RingView_Previews: PreviewProvider {  
   static var previews: some View {
     RingView()
-    .environmentObject(MainViewModel(time: "1:00",
-                                     sessionTitle: "Doing some ultra very advanced stuff that nobody can't do except me."))
+      .environmentObject(MainViewModel(time: "1:00",
+                                       sessionTitle: "Doing some ultra very advanced stuff that nobody can't do except me."))
   }
 }
 

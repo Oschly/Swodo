@@ -16,4 +16,13 @@ enum TimerState: String {
   case workTime
   case breakTime
   case stopped
+  
+  func buttonTitle() -> String {
+    switch self {
+    case .notStarted, .stopped:
+      return "Start"
+    default:
+      return "Stop"
+    }
+  }
 }

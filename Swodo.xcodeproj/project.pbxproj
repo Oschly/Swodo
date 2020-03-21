@@ -15,6 +15,7 @@
 		4715A98023F06B4F00B8E124 /* MathOperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4715A97F23F06B4F00B8E124 /* MathOperationType.swift */; };
 		4729089523F924B900AEC0EF /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4729089423F924B900AEC0EF /* CellView.swift */; };
 		4729089723F9257700AEC0EF /* SelectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4729089623F9257700AEC0EF /* SelectionViewTests.swift */; };
+		472AA9042426A2CF006578B3 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AA9032426A2CF006578B3 /* ActionButton.swift */; };
 		472AE8BC23DCD2A100FA95A8 /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */; };
 		472CCC8823F454500071D008 /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8723F454500071D008 /* ErrorType.swift */; };
 		472CCC8A23F4549D0071D008 /* ProgressDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */; };
@@ -65,6 +66,7 @@
 		4715A97F23F06B4F00B8E124 /* MathOperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathOperationType.swift; sourceTree = "<group>"; };
 		4729089423F924B900AEC0EF /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
 		4729089623F9257700AEC0EF /* SelectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionViewTests.swift; sourceTree = "<group>"; };
+		472AA9032426A2CF006578B3 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 		472CCC8723F454500071D008 /* ErrorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
 		472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDataDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				4729089423F924B900AEC0EF /* CellView.swift */,
 				4708FB7723FE8FB7001306F5 /* DetailView.swift */,
 				4C2D1F9A24196BEF00E51C0A /* SimpleCell.swift */,
+				472AA9032426A2CF006578B3 /* ActionButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 				4715A98023F06B4F00B8E124 /* MathOperationType.swift in Sources */,
 				7565FE05233093D5006A97EA /* SceneDelegate.swift in Sources */,
 				47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */,
+				472AA9042426A2CF006578B3 /* ActionButton.swift in Sources */,
 				478AF9B6239AD48A00B9EABA /* RingView.swift in Sources */,
 				47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */,
 				4768B66123F5E10F009287A3 /* NotificationCenterNames.swift in Sources */,
