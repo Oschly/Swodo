@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 import CoreData
-
+#warning("Add somewhere notification that when device orientation changes, selection view refreshes")
 final class MainViewModel: ObservableObject {
   internal var context: NSManagedObjectContext?
   private let storageManager = StorageManager()

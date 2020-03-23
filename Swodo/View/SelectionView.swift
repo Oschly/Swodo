@@ -11,6 +11,7 @@ import SwiftUI
 struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
   @Environment(\.managedObjectContext) var moc
+  @ObservedObject var keyboard = KeyboardResponder()
   
   // Values for Picker view, easier for later calculations
   // than multiplying values from 1 to 20 by 5
@@ -52,6 +53,7 @@ struct SelectionView: View {
                      maxHeight: 74)
                 .clipped()
                 .labelsHidden()
+              
               Text("Number of sessions")
             }
           }
@@ -62,6 +64,7 @@ struct SelectionView: View {
             .multilineTextAlignment(.center)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .frame(width: geometry.size.width * 0.8, alignment: .center)
+          
           
           HStack(spacing: 80) {
             ActionButton(title: self.viewModel.state.buttonTitle()) {
@@ -76,11 +79,14 @@ struct SelectionView: View {
               self.viewModel.startWorkCycle()
             }
             .disabled(self.viewModel.sessionTitle.isEmpty)
+            
           }
           .padding(30)
           Spacer()
         }
       }
+      .animation(.easeOut(duration: 0.3))
+    .adaptsToSoftwareKeyboard()
       .navigationBarTitle("Timer")
     }
     .navigationViewStyle(StackNavigationViewStyle())

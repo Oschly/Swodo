@@ -23,6 +23,8 @@
 		47592913239B7FA400000746 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592912239B7FA400000746 /* TimerState.swift */; };
 		4768B65C23F5B924009287A3 /* StorageManagerDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4768B65B23F5B924009287A3 /* StorageManagerDelegateMock.swift */; };
 		4768B66123F5E10F009287A3 /* NotificationCenterNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4768B66023F5E10F009287A3 /* NotificationCenterNames.swift */; };
+		476DD971242925C900CED4FF /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476DD970242925C900CED4FF /* KeyboardResponder.swift */; };
+		476DD97424292B9300CED4FF /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476DD97324292B9300CED4FF /* AdaptsToKeyboard.swift */; };
 		478AF9B4239AD42800B9EABA /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478AF9B3239AD42800B9EABA /* SelectionView.swift */; };
 		478AF9B6239AD48A00B9EABA /* RingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478AF9B5239AD48A00B9EABA /* RingView.swift */; };
 		47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DA134223BA1AC400E2F274 /* Session+CoreDataClass.swift */; };
@@ -74,6 +76,8 @@
 		47592912239B7FA400000746 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
 		4768B65B23F5B924009287A3 /* StorageManagerDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerDelegateMock.swift; sourceTree = "<group>"; };
 		4768B66023F5E10F009287A3 /* NotificationCenterNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterNames.swift; sourceTree = "<group>"; };
+		476DD970242925C900CED4FF /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
+		476DD97324292B9300CED4FF /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		478AF9B3239AD42800B9EABA /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		478AF9B5239AD48A00B9EABA /* RingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingView.swift; sourceTree = "<group>"; };
 		47DA134223BA1AC400E2F274 /* Session+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -131,6 +135,7 @@
 		04DA25DE2330B6F5005193E7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				476DD97224292B8A00CED4FF /* Modifiers */,
 				7565FE09233093D5006A97EA /* TabBarView.swift */,
 				478AF9B3239AD42800B9EABA /* SelectionView.swift */,
 				478AF9B5239AD48A00B9EABA /* RingView.swift */,
@@ -170,6 +175,7 @@
 				7565FE0B233093D7006A97EA /* Assets.xcassets */,
 				7565FE13233093D7006A97EA /* Info.plist */,
 				7565FE10233093D7006A97EA /* LaunchScreen.storyboard */,
+				476DD970242925C900CED4FF /* KeyboardResponder.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -199,6 +205,14 @@
 				4768B65B23F5B924009287A3 /* StorageManagerDelegateMock.swift */,
 			);
 			path = Mocks;
+			sourceTree = "<group>";
+		};
+		476DD97224292B8A00CED4FF /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				476DD97324292B9300CED4FF /* AdaptsToKeyboard.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		47DA134123BA1AC400E2F274 /* CoreData */ = {
@@ -410,6 +424,7 @@
 				7565FE05233093D5006A97EA /* SceneDelegate.swift in Sources */,
 				47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */,
 				472AA9042426A2CF006578B3 /* ActionButton.swift in Sources */,
+				476DD971242925C900CED4FF /* KeyboardResponder.swift in Sources */,
 				478AF9B6239AD48A00B9EABA /* RingView.swift in Sources */,
 				47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */,
 				4768B66123F5E10F009287A3 /* NotificationCenterNames.swift in Sources */,
@@ -428,6 +443,7 @@
 				478AF9B4239AD42800B9EABA /* SelectionView.swift in Sources */,
 				470E2CBC23EEEF5400591E4C /* DateComponentsFormatter.swift in Sources */,
 				47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */,
+				476DD97424292B9300CED4FF /* AdaptsToKeyboard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
