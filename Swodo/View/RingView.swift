@@ -48,7 +48,7 @@ struct RingView: View {
         
         Spacer()
         HStack() {
-          ActionButton(title: self.viewModel.state.buttonTitle()) {
+          ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
             self.viewModel.stopWorkSession()
           }
         }

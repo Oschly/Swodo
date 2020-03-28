@@ -9,26 +9,22 @@
 import Foundation
 import CoreGraphics
 import CoreData
+import Combine
+
 #warning("Add somewhere notification that when device orientation changes, selection view refreshes")
 final class MainViewModel: ObservableObject {
   internal var context: NSManagedObjectContext?
   private let storageManager = StorageManager()
+  
+  private var didChange = PassthroughSubject<Void, Never>()
   
   @Published var progressValue: CGFloat = 1.0
   @Published var time = String()
   @Published var sessionTitle = String()
   @Published var numberOfSessions = 1
   @Published var state: TimerState
-  @Published var workTime: CGFloat = 5
-  @Published var animationDuration: CGFloat = 5.0 {
-    willSet {
-      if state == .workTime {
-        time = newValue.timeFormattedToString()
-      } else if state == .breakTime {
-        time = (self.workTime - self.animationDuration).timeFormattedToString()
-      }
-    }
-  }
+  @Published var workTime: CGFloat = 300
+  @Published var animationDuration: CGFloat = 5.0
   
   var countdownTimer: Timer!
   var startSessionDate: Date!
@@ -41,7 +37,13 @@ final class MainViewModel: ObservableObject {
   }
   
   #if DEBUG
-  convenience init(time: String = "0:01", sessionTitle: String = "Doing stuff", numberOfSessions: Int = 1, state: TimerState = .notStarted, animationDuration: CGFloat = 5, workTime: CGFloat = 5, progressValue: CGFloat = 1) {
+  convenience init(time: String = "0:01",
+                   sessionTitle: String = "Doing stuff",
+                   numberOfSessions: Int = 1,
+                   state: TimerState = .notStarted,
+                   animationDuration: CGFloat = 5,
+                   workTime: CGFloat = 5,
+                   progressValue: CGFloat = 1) {
     self.init()
     
     self.time = time
@@ -56,8 +58,8 @@ final class MainViewModel: ObservableObject {
   
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
-    state = .workTime
     
+    state = .workTime
     countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (timer) in
       guard let self = self else { return }
       
@@ -157,6 +159,13 @@ final class MainViewModel: ObservableObject {
     let formula = 1 / (self.workTime / 0.1)
     mathOperation.execute(lhs: &progressValue, rhs: formula)
     mathOperation.execute(lhs: &animationDuration, rhs: 0.1)
+    
+    if state == .workTime {
+      time = animationDuration.timeFormattedToString()
+      print("Changed")
+    } else if state == .breakTime {
+      time = (self.workTime - self.animationDuration).timeFormattedToString()
+    }
   }
 }
 

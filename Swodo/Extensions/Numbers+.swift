@@ -17,7 +17,7 @@ extension CGFloat {
   
   // Return CGFloat as String without digits after coma
   func humanReadable() -> String {
-    String(format: "%.f", self)
+    String(format: "%.f", self / 60)
   }
   
   // Convert CGFloat value to time,

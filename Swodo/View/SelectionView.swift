@@ -15,9 +15,9 @@ struct SelectionView: View {
   
   // Values for Picker view, easier for later calculations
   // than multiplying values from 1 to 20 by 5
-  let workTimeValues = stride(from: 5.cgfloat(),
-                              to: 121.cgfloat(),
-                              by: 5.cgfloat())
+  let workTimeValues = stride(from: 300.cgfloat(),
+                              to: 7260.cgfloat(),
+                              by: 300.cgfloat())
   
   var body: some View {
     NavigationView {
@@ -67,7 +67,7 @@ struct SelectionView: View {
           
           
           HStack(spacing: 80) {
-            ActionButton(title: self.viewModel.state.buttonTitle()) {
+            ActionButton(enabled: !self.viewModel.sessionTitle.isEmpty, title: self.viewModel.state.buttonTitle()) {
               // TODO: - Move it to viewModel as new method.
               self.viewModel.progressValue = 1.0
               self.viewModel.setupContext(self.moc)

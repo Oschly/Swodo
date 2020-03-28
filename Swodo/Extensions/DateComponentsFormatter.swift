@@ -19,3 +19,21 @@ extension DateComponentsFormatter {
     return tempFormatter
   }
 }
+
+public extension Optional where Wrapped == Date {
+  var hour: String {
+    let formatter = DateComponentsFormatter()
+    guard let date = self,
+      let components = formatter.calendar?.dateComponents([.hour, .minute], from: date),
+      let string = formatter.string(from: components)
+      else {
+        return ""
+    }
+    
+    return string
+  }
+}
+
+public extension Bool {
+  var humanFriendly: String { self ? "Yes" : "No" }
+}

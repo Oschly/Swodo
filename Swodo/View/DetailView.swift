@@ -22,11 +22,22 @@ struct DetailView: View {
   var body: some View {
     NavigationView {
       Form {
-        Section {
+        Section(header: Text("General")) {
           SimpleCell(title: "Title", value: session.title)
-          SimpleCell(title: "Date", value: formattedDateString)
+          SimpleCell(title: "Canceled", value: session.canceled.humanFriendly)
         }
         
+        Section(header: Text("Time")) {
+          SimpleCell(title: "Date", value: formattedDateString)
+          SimpleCell(title: "Hour started", value: session.startDate.hour)
+          SimpleCell(title: "Hour ended", value: session.endDate.hour)
+        }
+        
+        Section(header: Text("Details")) {
+          SimpleCell(title: "Intervals", value: String(session.numberOfWorkIntervals))
+          SimpleCell(title: "Interval duration", value: String(session.singleWorkDuration) + " minutes")
+          SimpleCell(title: "Break duration", value: String(session.singleBreakDuration) + " minutes")
+        }
       }
       .navigationBarTitle("Session")
     }
@@ -39,6 +50,15 @@ struct DetailView_Previews: PreviewProvider {
   static var session: Session {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let session = Session(context: context)
+    session.title = "Test session"
+    session.canceled = false
+    session.id = UUID()
+    session.startDate = Date()
+    session.endDate = Date().addingTimeInterval(5 * 30 + 4 * 10)
+    session.numberOfWorkIntervals = 5
+    session.singleBreakDuration = 10
+    session.singleWorkDuration = 30
+    
     return session
   }
   

@@ -37,32 +37,32 @@ struct CellView: View {
   }
   
   var body: some View {
-    VStack {
-      HStack {
-        Text(self.session.title)
-          .bold()
-          .font(.system(size: 18))
-          .offset(x: 0, y: 3)
-        
+      VStack {
+        HStack {
+          Text(self.session.title)
+            .bold()
+            .font(.system(size: 18))
+            .offset(x: 0, y: 3)
+          
+          Spacer()
+        }
         Spacer()
-      }
-      Spacer()
-      HStack {
-        Text(formattedStartDateString)
-          .offset(x: 0, y: -10)
+        HStack {
+          Text(self.formattedStartDateString)
+            .offset(x: 0, y: -10)
+          
+          Spacer()
+          Text(self.formattedNumberOfIntervals)
+            .offset(x: 0, y: -10)
+        }
         
-        Spacer()
-        Text(formattedNumberOfIntervals)
-          .offset(x: 0, y: -10)
       }
-    }
-    .sheet(isPresented: $presentingDetails, content: {
-      DetailView(session: self.session)
-    })
+      .sheet(isPresented: self.$presentingDetails, content: {
+        DetailView(session: self.session)
+      })
       .onTapGesture {
         self.presentingDetails = true
     }
-    
   }
 }
 

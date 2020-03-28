@@ -10,7 +10,7 @@ import SwiftUI
 
 #warning("Implement disabled view")
 struct ActionButton: View {
-  let enabled = EnvironmentValues().isEnabled
+  var enabled: Bool
   
   let title: String
   let action: (() -> Void)
@@ -26,7 +26,7 @@ struct ActionButton: View {
         .background(GeometryReader { geo in
           Capsule()
             .frame(width: geo.size.width * 2.5, height: geo.size.height * 2)
-            .foregroundColor(self.secondaryColor)
+            .foregroundColor(self.enabled ? self.secondaryColor : .gray)
             .shadow(radius: 10)
         })
     }
@@ -35,6 +35,6 @@ struct ActionButton: View {
 
 struct ActionButton_Previews: PreviewProvider {
   static var previews: some View {
-    ActionButton(title: "Start", action: { })
+    ActionButton(enabled: false, title: "Start", action: { })
   }
 }

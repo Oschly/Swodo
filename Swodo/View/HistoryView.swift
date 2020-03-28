@@ -13,7 +13,6 @@ struct HistoryView: View {
                 sortDescriptors: [NSSortDescriptor(keyPath: \Session.endDate, ascending: false)])
   private var sessions: FetchedResults<Session>
   
-  // TODO: - Make own view for cells.
   var body: some View {
     NavigationView {
       List(sessions) { session in
