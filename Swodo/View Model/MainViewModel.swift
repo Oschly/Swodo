@@ -162,7 +162,6 @@ final class MainViewModel: ObservableObject {
     
     if state == .workTime {
       time = animationDuration.timeFormattedToString()
-      print("Changed")
     } else if state == .breakTime {
       time = (self.workTime - self.animationDuration).timeFormattedToString()
     }

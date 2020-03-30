@@ -35,6 +35,10 @@ extension CGFloat {
 // MARK: - Int Extensions
 extension BinaryInteger {
   func cgfloat() -> CGFloat {
-    CGFloat(self)
+    #if DEBUG
+    return CGFloat(self / 60)
+    #else
+    return CGFloat(self)
+    #endif
   }
 }

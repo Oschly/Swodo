@@ -32,9 +32,6 @@ import CoreData
 struct HistoryView_Preview: PreviewProvider {
   static var context: NSManagedObjectContext {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    let entry = Session(context: context)
-    
     return context
   }
   

@@ -29,8 +29,8 @@ struct DetailView: View {
         
         Section(header: Text("Time")) {
           SimpleCell(title: "Date", value: formattedDateString)
-          SimpleCell(title: "Hour started", value: session.startDate.hour)
-          SimpleCell(title: "Hour ended", value: session.endDate.hour)
+          SimpleCell(title: "Started at", value: session.startDate.hour)
+          SimpleCell(title: "Ended at", value: session.endDate.hour)
         }
         
         Section(header: Text("Details")) {

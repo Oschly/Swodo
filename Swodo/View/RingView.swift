@@ -15,44 +15,86 @@ struct RingView: View {
   // TODO: - move that view to center of the screen.
   var body: some View {
     GeometryReader { geometry in
-      VStack {
-        ZStack {
-          // Background circle which marks
-          // circle's below that path that it went.
-          Circle()
-            .stroke(lineWidth: 10.0)
-            .opacity(0.05)
-            .frame(width: geometry.size.width * 0.8,
-                   height: geometry.size.height / 3)
+      if UIDevice.current.orientation == .portrait {
+        VStack {
+          ZStack {
+            // Background circle which marks
+            // circle's below that path that it went.
+            Circle()
+              .stroke(lineWidth: 10.0)
+              .opacity(0.05)
+              .frame(width: geometry.size.width * 0.8,
+                     height: geometry.size.height / 3)
+            
+            Circle()
+              .trim(from: 0, to: self.viewModel.progressValue)
+              .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+              .animation(.default)
+              .foregroundColor(.red)
+              .frame(width: geometry.size.width * 0.8,
+                     height: geometry.size.height / 3)
+              .padding(geometry.size.height * 0.05)
+              .rotationEffect(.degrees(-90))
+            
+            
+            Text(self.viewModel.time)
+              .font(.largeTitle)
+              .bold()
+              .fontWeight(.heavy)
+          }
           
-          Circle()
-            .trim(from: 0, to: self.viewModel.progressValue)
-            .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
-            .animation(.default)
-            .foregroundColor(.red)
-            .frame(width: geometry.size.width * 0.8,
-                   height: geometry.size.height / 3)
-            .padding(geometry.size.height * 0.05)
-            .rotationEffect(.degrees(-90))
+          Text(self.viewModel.sessionTitle)
+            .fontWeight(.bold)
+            .multilineTextAlignment(.center)
+            .frame(width: geometry.size.width * 0.9)
           
-          
-          Text(self.viewModel.time)
-            .font(.largeTitle)
-            .bold()
-            .fontWeight(.heavy)
+          Spacer()
+          HStack() {
+            ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
+              self.viewModel.stopWorkSession()
+            }
+          }
+          Spacer(minLength: geometry.size.height / 3 + 5)
         }
-        
-        Text(self.viewModel.sessionTitle)
-          .fontWeight(.bold)
-          .multilineTextAlignment(.center)
-        
-        Spacer()
-        HStack() {
+      } else {
+        HStack {
           ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
             self.viewModel.stopWorkSession()
           }
+          .offset(x: geometry.size.width * 0.1 / 2)
+          ZStack {
+            // Background circle which marks
+            // circle's below that path that it went.
+            Circle()
+              .stroke(lineWidth: 10.0)
+              .opacity(0.05)
+              .frame(width: geometry.size.width * 0.8,
+                     height: geometry.size.height * 0.8)
+            
+            Circle()
+              .trim(from: 0, to: self.viewModel.progressValue)
+              .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+              .animation(.default)
+              .foregroundColor(.red)
+              .frame(width: geometry.size.width * 0.8,
+                     height: geometry.size.height * 0.8)
+              .padding(geometry.size.height * 0.05)
+              .rotationEffect(.degrees(-90))
+            
+            Text(self.viewModel.time)
+              .font(.largeTitle)
+              .bold()
+              .fontWeight(.heavy)
+          }
+          
+          GeometryReader { localGeo in
+            Text(self.viewModel.sessionTitle)
+              .fontWeight(.bold)
+              .multilineTextAlignment(.center)
+              .frame(width: localGeo.size.width * 3)
+              .offset(x: -geometry.size.width * 0.11)
+          }
         }
-        Spacer(minLength: geometry.size.height / 3 + 5)
       }
     }
   }

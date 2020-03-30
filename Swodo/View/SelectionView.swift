@@ -86,9 +86,9 @@ struct SelectionView: View {
         }
       }
       .animation(.easeOut(duration: 0.3))
-    .adaptsToSoftwareKeyboard()
       .navigationBarTitle("Timer")
     }
+    .adaptsToSoftwareKeyboard()
     .navigationViewStyle(StackNavigationViewStyle())
     .onTapGesture {
       UIApplication.shared.endEditing()
