@@ -16,8 +16,6 @@ final class MainViewModel: ObservableObject {
   internal var context: NSManagedObjectContext?
   private let storageManager = StorageManager()
   
-  private var didChange = PassthroughSubject<Void, Never>()
-  
   @Published var progressValue: CGFloat = 1.0
   @Published var time = String()
   @Published var sessionTitle = String()
@@ -36,25 +34,7 @@ final class MainViewModel: ObservableObject {
     storageManager.delegate = self
   }
   
-  #if DEBUG
-  convenience init(time: String = "0:01",
-                   sessionTitle: String = "Doing stuff",
-                   numberOfSessions: Int = 1,
-                   state: TimerState = .notStarted,
-                   animationDuration: CGFloat = 5,
-                   workTime: CGFloat = 5,
-                   progressValue: CGFloat = 1) {
-    self.init()
-    
-    self.time = time
-    self.sessionTitle = sessionTitle
-    self.numberOfSessions = numberOfSessions
-    self.state = state
-    self.animationDuration = animationDuration
-    self.workTime = workTime
-    self.progressValue = progressValue
-  }
-  #endif
+  
   
   // https://stackoverflow.com/a/58048635/8140676
   func startWorkCycle() {
@@ -166,6 +146,29 @@ final class MainViewModel: ObservableObject {
       time = (self.workTime - self.animationDuration).timeFormattedToString()
     }
   }
+}
+
+// MARK: - Debug inits
+extension MainViewModel {
+  #if DEBUG
+  convenience init(time: String = "0:01",
+                   sessionTitle: String = "Doing stuff",
+                   numberOfSessions: Int = 1,
+                   state: TimerState = .notStarted,
+                   animationDuration: CGFloat = 5,
+                   workTime: CGFloat = 5,
+                   progressValue: CGFloat = 1) {
+    self.init()
+    
+    self.time = time
+    self.sessionTitle = sessionTitle
+    self.numberOfSessions = numberOfSessions
+    self.state = state
+    self.animationDuration = animationDuration
+    self.workTime = workTime
+    self.progressValue = progressValue
+  }
+  #endif
 }
 
 extension MainViewModel: StorageManagerDelegate {}

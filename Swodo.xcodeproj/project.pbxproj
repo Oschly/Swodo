@@ -19,6 +19,7 @@
 		472AE8BC23DCD2A100FA95A8 /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */; };
 		472CCC8823F454500071D008 /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8723F454500071D008 /* ErrorType.swift */; };
 		472CCC8A23F4549D0071D008 /* ProgressDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */; };
+		47380601243F3BCA00DEB6D8 /* RingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47380600243F3BCA00DEB6D8 /* RingView.swift */; };
 		47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */; };
 		47592913239B7FA400000746 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592912239B7FA400000746 /* TimerState.swift */; };
 		4768B65C23F5B924009287A3 /* StorageManagerDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4768B65B23F5B924009287A3 /* StorageManagerDelegateMock.swift */; };
@@ -26,7 +27,7 @@
 		476DD971242925C900CED4FF /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476DD970242925C900CED4FF /* KeyboardResponder.swift */; };
 		476DD97424292B9300CED4FF /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476DD97324292B9300CED4FF /* AdaptsToKeyboard.swift */; };
 		478AF9B4239AD42800B9EABA /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478AF9B3239AD42800B9EABA /* SelectionView.swift */; };
-		478AF9B6239AD48A00B9EABA /* RingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478AF9B5239AD48A00B9EABA /* RingView.swift */; };
+		478AF9B6239AD48A00B9EABA /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478AF9B5239AD48A00B9EABA /* FocusView.swift */; };
 		47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DA134223BA1AC400E2F274 /* Session+CoreDataClass.swift */; };
 		47DA134523BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DA134223BA1AC400E2F274 /* Session+CoreDataClass.swift */; };
 		47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DA134323BA1AC400E2F274 /* Session+CoreDataProperties.swift */; };
@@ -72,6 +73,7 @@
 		472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 		472CCC8723F454500071D008 /* ErrorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
 		472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDataDelegate.swift; sourceTree = "<group>"; };
+		47380600243F3BCA00DEB6D8 /* RingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingView.swift; sourceTree = "<group>"; };
 		47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UserDefaultsKeys.swift"; sourceTree = "<group>"; };
 		47592912239B7FA400000746 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
 		4768B65B23F5B924009287A3 /* StorageManagerDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerDelegateMock.swift; sourceTree = "<group>"; };
@@ -79,7 +81,7 @@
 		476DD970242925C900CED4FF /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		476DD97324292B9300CED4FF /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		478AF9B3239AD42800B9EABA /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
-		478AF9B5239AD48A00B9EABA /* RingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingView.swift; sourceTree = "<group>"; };
+		478AF9B5239AD48A00B9EABA /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
 		47DA134223BA1AC400E2F274 /* Session+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+CoreDataClass.swift"; sourceTree = "<group>"; };
 		47DA134323BA1AC400E2F274 /* Session+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		47F314D623D39CB200503014 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
@@ -138,7 +140,8 @@
 				476DD97224292B8A00CED4FF /* Modifiers */,
 				7565FE09233093D5006A97EA /* TabBarView.swift */,
 				478AF9B3239AD42800B9EABA /* SelectionView.swift */,
-				478AF9B5239AD48A00B9EABA /* RingView.swift */,
+				478AF9B5239AD48A00B9EABA /* FocusView.swift */,
+				47380600243F3BCA00DEB6D8 /* RingView.swift */,
 				4703A62C23BDEC5800976C26 /* HistoryView.swift */,
 				4729089423F924B900AEC0EF /* CellView.swift */,
 				4708FB7723FE8FB7001306F5 /* DetailView.swift */,
@@ -350,7 +353,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "Oschły";
 				TargetAttributes = {
 					7565FDFE233093D5006A97EA = {
@@ -425,7 +428,8 @@
 				47DA134423BA1AC400E2F274 /* Session+CoreDataClass.swift in Sources */,
 				472AA9042426A2CF006578B3 /* ActionButton.swift in Sources */,
 				476DD971242925C900CED4FF /* KeyboardResponder.swift in Sources */,
-				478AF9B6239AD48A00B9EABA /* RingView.swift in Sources */,
+				47380601243F3BCA00DEB6D8 /* RingView.swift in Sources */,
+				478AF9B6239AD48A00B9EABA /* FocusView.swift in Sources */,
 				47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */,
 				4768B66123F5E10F009287A3 /* NotificationCenterNames.swift in Sources */,
 				472CCC8A23F4549D0071D008 /* ProgressDataDelegate.swift in Sources */,
@@ -601,7 +605,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};

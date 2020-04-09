@@ -17,7 +17,7 @@ struct TabBarView: View {
     // what's not related with timer itself and OS's elements
     if mainViewModel.state == .workTime || mainViewModel.state == .breakTime {
       return AnyView(
-        RingView()
+        FocusView()
           
           // Code below gives smooth transistions between
           // timer's states
