@@ -11,18 +11,11 @@ import Combine
 
 
 struct AdaptsToSoftwareKeyboard: ViewModifier {
-  @State private var orientation = UIDevice.current.orientation
+  @State private var deviceName = UIDevice.current.name
   @State var currentHeight: CGFloat = 0
   
-  init() {
-    NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification,
-                                           object: nil,
-                                           queue: nil,
-                                           using: updateOrientation(_:))
-  }
-  
   func body(content: Content) -> some View {
-    if orientation.isLandscape {
+    if deviceName == "iPhone SE" {
       return AnyView(content
         .padding(.bottom, currentHeight)
         .edgesIgnoringSafeArea(currentHeight == 0 ? Edge.Set() : .bottom)
@@ -45,13 +38,6 @@ struct AdaptsToSoftwareKeyboard: ViewModifier {
     _ = Publishers.Merge(keyboardWillOpen, keyboardWillHide)
       .subscribe(on: RunLoop.main)
       .assign(to: \.currentHeight, on: self)
-  }
-  
-  private func updateOrientation(_ notification: Notification) {
-    guard let orientation = notification.object as? UIDevice else {
-      return
-    }
-    self.orientation = orientation.orientation
   }
 }
 

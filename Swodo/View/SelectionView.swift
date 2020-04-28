@@ -88,6 +88,7 @@ struct SelectionView: View {
       .animation(.easeOut(duration: 0.3))
       .navigationBarTitle("Timer")
     }
+    .animation(.easeOut)
     .adaptsToSoftwareKeyboard()
     .navigationViewStyle(StackNavigationViewStyle())
     .onTapGesture {

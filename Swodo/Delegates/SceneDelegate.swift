@@ -11,7 +11,8 @@ import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
-
+  
+  var settings = Settings()
   var mainViewModel = MainViewModel()
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -20,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let mainView = TabBarView()
       .environment(\.managedObjectContext, context)
       .environmentObject(mainViewModel)
+      .environmentObject(settings)
 
     if let windowScene = scene as? UIWindowScene {
         let window = UIWindow(windowScene: windowScene)
@@ -45,3 +47,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+class Settings: ObservableObject {
+}

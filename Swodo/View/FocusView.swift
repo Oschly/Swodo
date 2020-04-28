@@ -13,48 +13,33 @@ struct FocusView: View {
   
   var body: some View {
     GeometryReader { geometry in
-      if UIDevice.current.orientation == .portrait ||
-      UIDevice.current.orientation == .faceUp ||
-      UIDevice.current.orientation == .faceDown {
-        VStack {
-          ZStack {
-            // Background circle which marks
-            // circle's below that path that it went.
-            RingView(progressValue: self.$viewModel.progressValue,
-                     time: self.$viewModel.time,
-                     title: self.$viewModel.sessionTitle,
-                     height: geometry.size.height)
-          }
-          
-          Text(self.viewModel.sessionTitle)
-            .fontWeight(.bold)
-            .multilineTextAlignment(.center)
-            .frame(width: geometry.size.width * 0.9)
-          
-          Spacer()
-          HStack() {
-            ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
-              self.viewModel.stopWorkSession()
-            }
-          }
-          Spacer(minLength: geometry.size.height / 3 + 5)
-        }
-      } else {
-        HStack {
-          ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
-            self.viewModel.stopWorkSession()
-          }
-          .offset(x: geometry.size.width * 0.14 / 2)
-          
+      VStack {
+        ZStack {
+          // Background circle which marks
+          // circle's below that path that it went.
           RingView(progressValue: self.$viewModel.progressValue,
                    time: self.$viewModel.time,
                    title: self.$viewModel.sessionTitle,
                    height: geometry.size.height)
+        }
+        
+        Text(self.viewModel.sessionTitle)
+          .fontWeight(.bold)
+          .multilineTextAlignment(.center)
+          .frame(width: geometry.size.width * 0.9)
+          .padding(.top, 40)
+        
+        Spacer(minLength: 50)
+        HStack() {
+          ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
+            self.viewModel.stopWorkSession()
           }
         }
+        Spacer(minLength: geometry.size.height / 3)
       }
     }
   }
+}
 
 
 #if DEBUG

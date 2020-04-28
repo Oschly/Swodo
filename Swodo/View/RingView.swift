@@ -14,40 +14,32 @@ struct RingView: View {
   @Binding var title: String
   
   var height: CGFloat
-  var heightMultiplier: CGFloat { !isLandscape ? 0.8 : 1/3 }
-  
-  var isLandscape: Bool { UIDevice.current.orientation == .faceDown || UIDevice.current.orientation == .faceUp || UIDevice.current.orientation == .portrait }
   
   var body: some View {
+    VStack {
+      Spacer()
     ZStack {
       Circle()
         .stroke(lineWidth: 10.0)
         .opacity(0.05)
-        .frame(height: height * heightMultiplier)
+        .frame(height: height * 0.45)
+        .onAppear { print("background: \(self.height * 0.8)")}
       
       Circle()
         .trim(from: 0, to: progressValue)
         .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
-        .animation(.default)
+        .animation(.easeIn)
         .foregroundColor(.red)
-        .frame(height: height * heightMultiplier)
-        .padding(height * 0.05)
+        .frame(height: height * 0.45)
         .rotationEffect(.degrees(-90))
-        .onAppear { print(self.isLandscape) }
+        .onAppear { print(self.height * 0.75) }
       
       Text(time)
         .font(.largeTitle)
         .bold()
         .fontWeight(.heavy)
-      
-      GeometryReader { localGeo in
-        Text(self.title)
-          .fontWeight(.bold)
-          .multilineTextAlignment(.center)
-          .frame(width: localGeo.size.width * 0.2)
-          .offset(x: localGeo.size.width * 0.37)
-      }
     }
+  }
   }
   #warning("This view is bugged if first time is loaded portrait view")
 }
@@ -58,6 +50,26 @@ struct RingView_Previews: PreviewProvider {
              time: .constant("20"),
              title: .constant("Ultra wide title that if I am good programmer it will fit properly on every screen that is available on the market."),
              height: 704)
-      .previewLayout(.fixed(width: 1218, height: 563))
+      //.previewLayout(.fixed(width: 1218, height: 563))
+    .previewDevice("iPhone Xr")
+  }
+}
+
+struct Hidden: ViewModifier {
+  let bool: Bool
+  
+    func body(content: Content) -> some View {
+      if bool {
+        return AnyView(content.hidden())
+      } else {
+        return AnyView(content)
+      }
+    }
+}
+
+extension View {
+  func hidden(_ hidden: Bool) -> some View {
+    return self
+      .modifier(Hidden(bool: hidden))
   }
 }

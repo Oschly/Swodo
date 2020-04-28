@@ -14,26 +14,35 @@ import Combine
 #warning("Add somewhere notification that when device orientation changes, selection view refreshes")
 final class MainViewModel: ObservableObject {
   internal var context: NSManagedObjectContext?
+  
   private let storageManager = StorageManager()
   
   @Published var progressValue: CGFloat = 1.0
+  
   @Published var time = String()
+  
   @Published var sessionTitle = String()
+  
   @Published var numberOfSessions = 1
+  
   @Published var state: TimerState
+  
   @Published var workTime: CGFloat = 300
+  
   @Published var animationDuration: CGFloat = 5.0
   
   var countdownTimer: Timer!
+  
   var startSessionDate: Date!
+  
   var numberOfWorkIntervals: Int16?
+  
   var singleWorkDuration: Int16?
   
   init() {
     state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
     storageManager.delegate = self
   }
-  
   
   
   // https://stackoverflow.com/a/58048635/8140676
