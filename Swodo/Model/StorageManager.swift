@@ -63,64 +63,67 @@ extension StorageManager {
   }
   
   func readUnfinishedSession() {
-    
-    // Check if isn't already there another process of saving data
-    // or any other case that this method shouldn't be executed now
-    guard !isUsingDisk,
-      var delegate = delegate,
-      delegate.state != .notStarted
-      else { return }
-    isUsingDisk = true
-    
-    // Set default value key for 5 minutes (lowest available)
-    // in case of absence of value for .workTimeKey
-    userDefaults.register(defaults: [.workTimeKey: 5])
-    
-    // Calculate time between app's last exit and present re-launch
-    // (app doesn't have to be killed to execute that method).
-    //
-    // differenceBetweenDates uses negated value of exitDate, because
-    // any timeIntervalSinceNow used on past date returns negative value.
-    guard let exitDate = userDefaults.value(forKey: .dateKey) as? Date else { return }
-    var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
-    
-    // Read informations about last session from UserDefaults
-    delegate.workTime = CGFloat(userDefaults.integer(forKey: .workTimeKey))
-    delegate.numberOfSessions = userDefaults.integer(forKey: .numberOfSessionsKey)
-    
-    // Calculate present session's state based on data of last exit and present launch
-    while differenceBetweenDates > delegate.workTime {
+    userDefaultsQueue.async { [weak self] in
+      guard let self = self else { return }
       
-      // If differeneceBetweenDates is bigger than workTime and numberOfSessions equals 1,
-      // there is no need to continue the loop, just set session as ended.
-      if delegate.numberOfSessions == 1 {
-        delegate.state = .notStarted
+      // Check if isn't already there another process of saving data
+      // or any other case that this method shouldn't be executed now
+      guard !self.isUsingDisk,
+        var delegate = self.delegate,
+        delegate.state != .notStarted
+        else { return }
+      self.isUsingDisk = true
+      
+      // Set default value key for 5 minutes (lowest available)
+      // in case of absence of value for .workTimeKey
+      self.userDefaults.register(defaults: [.workTimeKey: 5])
+      
+      // Calculate time between app's last exit and present re-launch
+      // (app doesn't have to be killed to execute that method).
+      //
+      // differenceBetweenDates uses negated value of exitDate, because
+      // any timeIntervalSinceNow used on past date returns negative value.
+      guard let exitDate = self.userDefaults.value(forKey: .dateKey) as? Date else { return }
+      var differenceBetweenDates = CGFloat(-exitDate.timeIntervalSinceNow)
+      
+      // Read informations about last session from UserDefaults
+      delegate.workTime = CGFloat(self.userDefaults.integer(forKey: .workTimeKey))
+      delegate.numberOfSessions = self.userDefaults.integer(forKey: .numberOfSessionsKey)
+      
+      // Calculate present session's state based on data of last exit and present launch
+      while differenceBetweenDates > delegate.workTime {
+        
+        // If differeneceBetweenDates is bigger than workTime and numberOfSessions equals 1,
+        // there is no need to continue the loop, just set session as ended.
+        if delegate.numberOfSessions == 1 {
+          delegate.state = .notStarted
+        }
+        guard delegate.state != .notStarted else { return }
+        
+        delegate.numberOfSessions -= 1
+        differenceBetweenDates -= delegate.workTime
       }
-      guard delegate.state != .notStarted else { return }
       
-      delegate.numberOfSessions -= 1
-      differenceBetweenDates -= delegate.workTime
+      // Read the data from last session, to calculate present state of progress Ring.
+      let leftAnimationTime = CGFloat(self.userDefaults.float(forKey: .animationDurationKey))
+      
+      // animationDuration increases its value when is counting breaks' time and
+      // decreasing when counting works' time.
+      if delegate.state == .workTime {
+        delegate.animationDuration = leftAnimationTime - differenceBetweenDates
+      } else {
+        delegate.animationDuration = leftAnimationTime + differenceBetweenDates
+      }
+      
+      // Bring progress circle to present state
+      delegate.progressValue = delegate.animationDuration / delegate.workTime
+      delegate.sessionTitle = self.userDefaults.string(forKey: .sessionTitleKey) ?? ""
+      print("Duration: ", delegate.animationDuration)
+      print("workTime: ", delegate.workTime)
+      print("progressValue: ", delegate.progressValue)
+      self.clearSessionUserDefaults()
+      self.isUsingDisk = false
     }
-    
-    // Read the data from last session, to calculate present state of progress Ring.
-    let leftAnimationTime = CGFloat(userDefaults.float(forKey: .animationDurationKey))
-    
-    // animationDuration increases its value when is counting breaks' time and
-    // decreasing when counting works' time.
-    if delegate.state == .workTime {
-      delegate.animationDuration = leftAnimationTime - differenceBetweenDates
-    } else {
-      delegate.animationDuration = leftAnimationTime + differenceBetweenDates
-    }
-    
-    // Bring progress circle to present state
-    delegate.progressValue = delegate.animationDuration / delegate.workTime
-    delegate.sessionTitle = userDefaults.string(forKey: .sessionTitleKey) ?? ""
-    print("Duration: ", delegate.animationDuration)
-    print("workTime: ", delegate.workTime)
-    print("progressValue: ", delegate.progressValue)
-    clearSessionUserDefaults()
-    isUsingDisk = false
   }
   
   internal func clearSessionUserDefaults() {

@@ -19,6 +19,10 @@
 		472AE8BC23DCD2A100FA95A8 /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */; };
 		472CCC8823F454500071D008 /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8723F454500071D008 /* ErrorType.swift */; };
 		472CCC8A23F4549D0071D008 /* ProgressDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */; };
+		4734B7B1245942DB009DC276 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734B7B0245942DB009DC276 /* Settings.swift */; };
+		4734B7B3245943F8009DC276 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734B7B2245943F8009DC276 /* SettingsView.swift */; };
+		4734B7BA24594779009DC276 /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734B7B924594779009DC276 /* ThemeView.swift */; };
+		4734B7BC245947AA009DC276 /* ThemesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4734B7BB245947AA009DC276 /* ThemesViewModel.swift */; };
 		47380601243F3BCA00DEB6D8 /* RingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47380600243F3BCA00DEB6D8 /* RingView.swift */; };
 		47592911239B7F7700000746 /* String+UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */; };
 		47592913239B7FA400000746 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47592912239B7FA400000746 /* TimerState.swift */; };
@@ -73,6 +77,10 @@
 		472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 		472CCC8723F454500071D008 /* ErrorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
 		472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDataDelegate.swift; sourceTree = "<group>"; };
+		4734B7B0245942DB009DC276 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		4734B7B2245943F8009DC276 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4734B7B924594779009DC276 /* ThemeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeView.swift; sourceTree = "<group>"; };
+		4734B7BB245947AA009DC276 /* ThemesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewModel.swift; sourceTree = "<group>"; };
 		47380600243F3BCA00DEB6D8 /* RingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingView.swift; sourceTree = "<group>"; };
 		47592910239B7F7700000746 /* String+UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UserDefaultsKeys.swift"; sourceTree = "<group>"; };
 		47592912239B7FA400000746 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
@@ -130,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				04DA25E42330BF31005193E7 /* MainViewModel.swift */,
+				4734B7BB245947AA009DC276 /* ThemesViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -137,16 +146,11 @@
 		04DA25DE2330B6F5005193E7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				476DD97224292B8A00CED4FF /* Modifiers */,
 				7565FE09233093D5006A97EA /* TabBarView.swift */,
-				478AF9B3239AD42800B9EABA /* SelectionView.swift */,
-				478AF9B5239AD48A00B9EABA /* FocusView.swift */,
-				47380600243F3BCA00DEB6D8 /* RingView.swift */,
-				4703A62C23BDEC5800976C26 /* HistoryView.swift */,
-				4729089423F924B900AEC0EF /* CellView.swift */,
-				4708FB7723FE8FB7001306F5 /* DetailView.swift */,
-				4C2D1F9A24196BEF00E51C0A /* SimpleCell.swift */,
-				472AA9032426A2CF006578B3 /* ActionButton.swift */,
+				4734B7B524594551009DC276 /* MainView */,
+				4734B7B42459451C009DC276 /* HistoryView */,
+				4734B7B624594573009DC276 /* SettingsView */,
+				476DD97224292B8A00CED4FF /* Modifiers */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -154,11 +158,9 @@
 		04DA25DF2330B6FE005193E7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				47592912239B7FA400000746 /* TimerState.swift */,
 				47F314D623D39CB200503014 /* StorageManager.swift */,
-				4715A97F23F06B4F00B8E124 /* MathOperationType.swift */,
-				472CCC8723F454500071D008 /* ErrorType.swift */,
-				472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */,
+				4734B7B724594581009DC276 /* Main */,
+				4734B7B8245946B7009DC276 /* Settings */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -189,6 +191,56 @@
 				472AE8BB23DCD2A100FA95A8 /* StorageManagerTests.swift */,
 			);
 			path = Cases;
+			sourceTree = "<group>";
+		};
+		4734B7B42459451C009DC276 /* HistoryView */ = {
+			isa = PBXGroup;
+			children = (
+				4703A62C23BDEC5800976C26 /* HistoryView.swift */,
+				4729089423F924B900AEC0EF /* CellView.swift */,
+				4C2D1F9A24196BEF00E51C0A /* SimpleCell.swift */,
+				4708FB7723FE8FB7001306F5 /* DetailView.swift */,
+			);
+			path = HistoryView;
+			sourceTree = "<group>";
+		};
+		4734B7B524594551009DC276 /* MainView */ = {
+			isa = PBXGroup;
+			children = (
+				472AA9032426A2CF006578B3 /* ActionButton.swift */,
+				478AF9B3239AD42800B9EABA /* SelectionView.swift */,
+				478AF9B5239AD48A00B9EABA /* FocusView.swift */,
+				47380600243F3BCA00DEB6D8 /* RingView.swift */,
+			);
+			path = MainView;
+			sourceTree = "<group>";
+		};
+		4734B7B624594573009DC276 /* SettingsView */ = {
+			isa = PBXGroup;
+			children = (
+				4734B7B2245943F8009DC276 /* SettingsView.swift */,
+				4734B7B924594779009DC276 /* ThemeView.swift */,
+			);
+			path = SettingsView;
+			sourceTree = "<group>";
+		};
+		4734B7B724594581009DC276 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				472CCC8923F4549D0071D008 /* ProgressDataDelegate.swift */,
+				472CCC8723F454500071D008 /* ErrorType.swift */,
+				4715A97F23F06B4F00B8E124 /* MathOperationType.swift */,
+				47592912239B7FA400000746 /* TimerState.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		4734B7B8245946B7009DC276 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4734B7B0245942DB009DC276 /* Settings.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		4759290F239B7F6B00000746 /* Extensions */ = {
@@ -431,6 +483,8 @@
 				47380601243F3BCA00DEB6D8 /* RingView.swift in Sources */,
 				478AF9B6239AD48A00B9EABA /* FocusView.swift in Sources */,
 				47DA134623BA1AC400E2F274 /* Session+CoreDataProperties.swift in Sources */,
+				4734B7BC245947AA009DC276 /* ThemesViewModel.swift in Sources */,
+				4734B7BA24594779009DC276 /* ThemeView.swift in Sources */,
 				4768B66123F5E10F009287A3 /* NotificationCenterNames.swift in Sources */,
 				472CCC8A23F4549D0071D008 /* ProgressDataDelegate.swift in Sources */,
 				4703A62D23BDEC5800976C26 /* HistoryView.swift in Sources */,
@@ -439,6 +493,8 @@
 				47592913239B7FA400000746 /* TimerState.swift in Sources */,
 				7565FE0A233093D5006A97EA /* TabBarView.swift in Sources */,
 				4C2D1F9B24196BEF00E51C0A /* SimpleCell.swift in Sources */,
+				4734B7B3245943F8009DC276 /* SettingsView.swift in Sources */,
+				4734B7B1245942DB009DC276 /* Settings.swift in Sources */,
 				7565FE08233093D5006A97EA /* Swodo.xcdatamodeld in Sources */,
 				472CCC8823F454500071D008 /* ErrorType.swift in Sources */,
 				04DA25E52330BF31005193E7 /* MainViewModel.swift in Sources */,

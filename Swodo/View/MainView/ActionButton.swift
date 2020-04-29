@@ -10,13 +10,13 @@ import SwiftUI
 
 #warning("Implement disabled view")
 struct ActionButton: View {
+  @EnvironmentObject var settings: Settings
   var enabled: Bool
   
   let title: String
   let action: (() -> Void)
   
   let primaryColor: Color = .white
-  let secondaryColor: Color = .blue
   
   var body: some View {
     Button(action: action) {
@@ -26,7 +26,7 @@ struct ActionButton: View {
         .background(GeometryReader { geo in
           Capsule()
             .frame(width: geo.size.width * 2.5, height: geo.size.height * 2)
-            .foregroundColor(self.enabled ? self.secondaryColor : .gray)
+            .foregroundColor(self.enabled ? self.settings.theme.value() : .gray)
             .shadow(radius: 10)
         })
     }

@@ -46,6 +46,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   }
 
 }
-
-class Settings: ObservableObject {
-}

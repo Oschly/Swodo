@@ -10,6 +10,7 @@ import SwiftUI
 
 struct TabBarView: View {
   @EnvironmentObject var mainViewModel: MainViewModel
+  @EnvironmentObject var settings: Settings
   @State private var opacity = 0.0
   
   var body: some View {
@@ -52,16 +53,17 @@ struct TabBarView: View {
           }
       }
       
-      Text("Settings")
+      SettingsView()
         .tabItem {
           VStack {
             Text("Settings")
             Image(systemName: "gear")
               .font(.system(size: 23))
-            
+
           }
       }
     }
+    .accentColor(settings.theme.value())
       
       // Code below gives smooth transistions between
       // timer's states
@@ -74,6 +76,9 @@ struct TabBarView: View {
     .onDisappear {
       self.opacity = 0.0
     })
+  }
+  
+  init() {
   }
 }
 

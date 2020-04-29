@@ -18,28 +18,28 @@ struct RingView: View {
   var body: some View {
     VStack {
       Spacer()
-    ZStack {
-      Circle()
-        .stroke(lineWidth: 10.0)
-        .opacity(0.05)
-        .frame(height: height * 0.45)
-        .onAppear { print("background: \(self.height * 0.8)")}
-      
-      Circle()
-        .trim(from: 0, to: progressValue)
-        .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
-        .animation(.easeIn)
-        .foregroundColor(.red)
-        .frame(height: height * 0.45)
-        .rotationEffect(.degrees(-90))
-        .onAppear { print(self.height * 0.75) }
-      
-      Text(time)
-        .font(.largeTitle)
-        .bold()
-        .fontWeight(.heavy)
+      ZStack {
+        Circle()
+          .stroke(lineWidth: 10.0)
+          .opacity(0.05)
+          .frame(height: height * 0.45)
+          .onAppear { print("background: \(self.height * 0.8)")}
+        
+        Circle()
+          .trim(from: 0, to: progressValue)
+          .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+          .animation(.easeIn)
+          .foregroundColor(.red)
+          .frame(height: height * 0.45)
+          .rotationEffect(.degrees(-90))
+          .onAppear { print(self.height * 0.75) }
+        
+        Text(time)
+          .font(.largeTitle)
+          .bold()
+          .fontWeight(.heavy)
+      }
     }
-  }
   }
   #warning("This view is bugged if first time is loaded portrait view")
 }
@@ -51,20 +51,20 @@ struct RingView_Previews: PreviewProvider {
              title: .constant("Ultra wide title that if I am good programmer it will fit properly on every screen that is available on the market."),
              height: 704)
       //.previewLayout(.fixed(width: 1218, height: 563))
-    .previewDevice("iPhone Xr")
+      .previewDevice("iPhone Xr")
   }
 }
 
 struct Hidden: ViewModifier {
   let bool: Bool
   
-    func body(content: Content) -> some View {
-      if bool {
-        return AnyView(content.hidden())
-      } else {
-        return AnyView(content)
-      }
+  func body(content: Content) -> some View {
+    if bool {
+      return AnyView(content.hidden())
+    } else {
+      return AnyView(content)
     }
+  }
 }
 
 extension View {
