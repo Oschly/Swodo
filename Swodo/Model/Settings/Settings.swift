@@ -12,19 +12,32 @@ import UIKit
 final class Settings: ObservableObject {
   @Published var theme: ColorLiteral {
     didSet {
-      UserDefaults.standard.set(theme.rawValue, forKey: "theme")    }
+      UserDefaults.standard.set(theme.rawValue, forKey: "theme")
+    }
+  }
+  
+  @Published var ringTheme: ColorLiteral {
+    didSet {
+      UserDefaults.standard.set(ringTheme.rawValue, forKey: "ringTheme")
+    }
   }
   
   init() {
     theme = ColorLiteral(rawValue: UserDefaults.standard.string(forKey: "theme") ??
       ColorLiteral.blue.rawValue)!
     
+    ringTheme = ColorLiteral(rawValue: UserDefaults.standard.string(forKey: "ringTheme") ??
+    ColorLiteral.red.rawValue)!
   }
 }
 
 extension Settings {
   func changeTheme(to color: ColorLiteral) {
     theme = color
+  }
+  
+  func changeRingTheme(to color: ColorLiteral) {
+    ringTheme = color
   }
 }
 

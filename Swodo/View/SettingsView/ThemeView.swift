@@ -11,12 +11,17 @@ import SwiftUI
 struct ThemeView: View {
   @EnvironmentObject private var settings: Settings
   @ObservedObject private var viewModel = ThemesViewModel()
+  
+  var changeColorHandler: ((ColorLiteral) -> ())
+  var sampleView: AnyView
+  var offset: CGFloat
+  
   var body: some View {
+    ZStack {
     VStack {
-      ActionButton(enabled: true,
-                   title: "Test button",
-                   action: {})
-        .padding(.bottom, 10)
+      sampleView
+        .padding(.top, offset)
+      .background(Color(.systemGray6))
       
       List(viewModel.colors, id: \.self) { color in
         HStack {
@@ -28,16 +33,23 @@ struct ThemeView: View {
         }
         .onTapGesture {
           withAnimation {
-            self.settings.changeTheme(to: ColorLiteral(rawValue: color)!)
+            self.changeColorHandler(ColorLiteral(rawValue: color)!)
           }
         }
       }
+    }
+    .zIndex(2)
+    
+    Rectangle()
+      .foregroundColor(Color(.systemGray6))
+      .edgesIgnoringSafeArea(.all)
+      .zIndex(1)
     }
   }
 }
 
 struct ThemeView_Previews: PreviewProvider {
   static var previews: some View {
-    ThemeView()
+    ThemeView(changeColorHandler: { _ in }, sampleView: AnyView(ActionButton()), offset: 300)
   }
 }

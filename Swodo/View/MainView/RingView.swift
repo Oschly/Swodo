@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct RingView: View {
+  @EnvironmentObject var settings: Settings
+  
   @Binding var progressValue: CGFloat
   @Binding var time: String
   @Binding var title: String
@@ -23,16 +25,14 @@ struct RingView: View {
           .stroke(lineWidth: 10.0)
           .opacity(0.05)
           .frame(height: height * 0.45)
-          .onAppear { print("background: \(self.height * 0.8)")}
         
         Circle()
           .trim(from: 0, to: progressValue)
           .stroke(style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
           .animation(.easeIn)
-          .foregroundColor(.red)
+          .foregroundColor(settings.ringTheme.value())
           .frame(height: height * 0.45)
           .rotationEffect(.degrees(-90))
-          .onAppear { print(self.height * 0.75) }
         
         Text(time)
           .font(.largeTitle)
@@ -40,6 +40,23 @@ struct RingView: View {
           .fontWeight(.heavy)
       }
     }
+  }
+  
+  init(progressValue: Binding<CGFloat>,
+       time: Binding<String>,
+       title: Binding<String>,
+    height: CGFloat) {
+    self._progressValue = progressValue
+    self._time = time
+    self._title = title
+    self.height = height
+  }
+  
+  init(height: CGFloat) {
+    self._progressValue = .constant(1)
+    self._time = .constant("60:00")
+    self._title = .constant("Choosing awesome theme.")
+    self.height = height
   }
   #warning("This view is bugged if first time is loaded portrait view")
 }

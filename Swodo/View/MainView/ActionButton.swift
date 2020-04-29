@@ -16,13 +16,11 @@ struct ActionButton: View {
   let title: String
   let action: (() -> Void)
   
-  let primaryColor: Color = .white
-  
   var body: some View {
     Button(action: action) {
       Text(title)
         .fontWeight(.bold)
-        .foregroundColor(primaryColor)
+        .foregroundColor(.white)
         .background(GeometryReader { geo in
           Capsule()
             .frame(width: geo.size.width * 2.5, height: geo.size.height * 2)
@@ -30,6 +28,18 @@ struct ActionButton: View {
             .shadow(radius: 10)
         })
     }
+  }
+  
+  init(enabled: Bool, title: String, action: @escaping () -> ()) {
+    self.enabled = enabled
+    self.title = title
+    self.action = action
+  }
+  
+  init() {
+    self = ActionButton(enabled: true,
+                        title: "Test Button",
+                        action: {})
   }
 }
 

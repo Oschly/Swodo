@@ -118,9 +118,6 @@ extension StorageManager {
       // Bring progress circle to present state
       delegate.progressValue = delegate.animationDuration / delegate.workTime
       delegate.sessionTitle = self.userDefaults.string(forKey: .sessionTitleKey) ?? ""
-      print("Duration: ", delegate.animationDuration)
-      print("workTime: ", delegate.workTime)
-      print("progressValue: ", delegate.progressValue)
       self.clearSessionUserDefaults()
       self.isUsingDisk = false
     }

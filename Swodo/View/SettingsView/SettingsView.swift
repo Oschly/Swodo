@@ -9,16 +9,28 @@
 import SwiftUI
 
 struct SettingsView: View {
+  @EnvironmentObject var settings: Settings
+  
   var body: some View {
-    NavigationView {
-      Form {
-        Section(header: Text("General")) {
-          NavigationLink(destination: ThemeView()) {
-            Text("Theme")
+    GeometryReader { geo in
+      NavigationView {
+        Form {
+          Section(header: Text("General")) {
+            NavigationLink(destination: ThemeView(changeColorHandler: self.settings.changeTheme(to:),
+                                                  sampleView: AnyView(ActionButton()), offset: -(geo.size.height / 18))) {
+                                                    Text("App theme")
+            }
+            
+            NavigationLink(destination: ThemeView(changeColorHandler: self.settings.changeRingTheme(to:),
+                                                  sampleView: AnyView(RingView(height: geo.size.height)),
+                                                  offset: -(geo.size.height / 1))) {
+                                                    Text("Progress ring theme")
+            }
+            
           }
         }
+        .navigationBarTitle("Settings")
       }
-      .navigationBarTitle("Settings")
     }
   }
 }
