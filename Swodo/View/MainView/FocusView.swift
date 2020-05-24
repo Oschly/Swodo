@@ -11,6 +11,8 @@ import SwiftUI
 struct FocusView: View {
   @EnvironmentObject var viewModel: MainViewModel
   
+  @State private var showCancelAlert = false
+  
   var body: some View {
     GeometryReader { geometry in
       VStack {
@@ -33,11 +35,22 @@ struct FocusView: View {
         HStack() {
           ActionButton(enabled: true, title: self.viewModel.state.buttonTitle()) {
             self.viewModel.stopWorkSession()
+            self.showCancelAlert = true
           }
         }
         Spacer(minLength: geometry.size.height / 3)
       }
     }
+    .alert(isPresented: $showCancelAlert) { () -> Alert in
+      Alert(title: Text("Are You sure?"),
+            primaryButton: .default(Text("Keep running")) {
+              self.viewModel.startWorkCycle()
+        },
+            secondaryButton: .cancel(Text("Cancel")) {
+              self.viewModel.saveToCoreData(isSessionCancelled: true)
+              self.viewModel.state = .notStarted
+        })
+  }
   }
 }
 

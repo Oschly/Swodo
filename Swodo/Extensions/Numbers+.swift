@@ -20,13 +20,12 @@ extension CGFloat {
     String(format: "%.f", self / 60)
   }
   
-  // Convert CGFloat value to time,
+  // Convert CGFloat value to time value,
   // ex: 120 -> 2:00
   func timeFormattedToString() -> String {
     let formatter = DateComponentsFormatter.viewTimeFormatter
     let rounded = self.rounded(.up).double()
     
-    // TODO: - Some spicy handling here
     guard let string = formatter.string(from: rounded) else { return "" }
     return string
   }
@@ -35,10 +34,6 @@ extension CGFloat {
 // MARK: - Int Extensions
 extension BinaryInteger {
   func cgfloat() -> CGFloat {
-    #if DEBUG
-    return CGFloat(self / 60)
-    #else
     return CGFloat(self)
-    #endif
   }
 }

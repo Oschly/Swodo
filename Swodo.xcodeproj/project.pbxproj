@@ -209,8 +209,8 @@
 			children = (
 				472AA9032426A2CF006578B3 /* ActionButton.swift */,
 				478AF9B3239AD42800B9EABA /* SelectionView.swift */,
-				478AF9B5239AD48A00B9EABA /* FocusView.swift */,
 				47380600243F3BCA00DEB6D8 /* RingView.swift */,
+				478AF9B5239AD48A00B9EABA /* FocusView.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";

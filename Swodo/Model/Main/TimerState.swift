@@ -19,7 +19,7 @@ enum TimerState: String {
   
   func buttonTitle() -> String {
     switch self {
-    case .notStarted, .stopped:
+    case .notStarted:
       return "Start"
     default:
       return "Stop"

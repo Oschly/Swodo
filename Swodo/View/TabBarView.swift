@@ -16,7 +16,9 @@ struct TabBarView: View {
   var body: some View {
     // If user launched session, there shouldn't be on the screen anything
     // what's not related with timer itself and OS's elements
-    if mainViewModel.state == .workTime || mainViewModel.state == .breakTime {
+    if mainViewModel.state == .workTime ||
+      mainViewModel.state == .breakTime ||
+    mainViewModel.state == .stopped {
       return AnyView(
         FocusView()
           

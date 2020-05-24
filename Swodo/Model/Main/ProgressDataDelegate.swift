@@ -22,4 +22,5 @@ protocol ProgressDataDelegate {
   var singleWorkDuration: Int16? { get set }
   var startSessionDate: Date! { get set }
   var sessionTitle: String { get set }
+  var breakDuration: Int16? { get set }
 }

@@ -22,6 +22,14 @@ final class Settings: ObservableObject {
     }
   }
   
+  @Published var breakDuration: Int16 = 5 {
+    didSet {
+      if breakDuration > 60 {
+        breakDuration = 60
+      }
+    }
+  }
+  
   init() {
     theme = ColorLiteral(rawValue: UserDefaults.standard.string(forKey: "theme") ??
       ColorLiteral.blue.rawValue)!

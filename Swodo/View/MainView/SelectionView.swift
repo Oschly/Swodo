@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
+  @EnvironmentObject var settings: Settings
   @Environment(\.managedObjectContext) var moc
   @ObservedObject var keyboard = KeyboardResponder()
   
@@ -74,8 +75,9 @@ struct SelectionView: View {
               self.viewModel.startSessionDate = Date()
               self.viewModel.numberOfWorkIntervals = Int16(self.viewModel.numberOfSessions)
               self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime)
-              
-              self.viewModel.setWorkTime()
+              self.viewModel.progressValue = 1.0
+              self.viewModel.breakDuration = self.settings.breakDuration
+              self.viewModel.animationDuration = self.viewModel.workTime
               self.viewModel.startWorkCycle()
             }
             .disabled(self.viewModel.sessionTitle.isEmpty)

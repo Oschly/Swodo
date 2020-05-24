@@ -15,7 +15,7 @@ struct AdaptsToSoftwareKeyboard: ViewModifier {
   @State var currentHeight: CGFloat = 0
   
   func body(content: Content) -> some View {
-    if deviceName == "iPhone SE" {
+    if deviceName == "iPhone SE (1st generation)" {
       return AnyView(content
         .padding(.bottom, currentHeight)
         .edgesIgnoringSafeArea(currentHeight == 0 ? Edge.Set() : .bottom)

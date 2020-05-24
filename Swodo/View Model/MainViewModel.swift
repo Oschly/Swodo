@@ -39,6 +39,8 @@ final class MainViewModel: ObservableObject {
   
   var singleWorkDuration: Int16?
   
+  var breakDuration: Int16?
+  
   init() {
     state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
     storageManager.delegate = self
@@ -64,7 +66,7 @@ final class MainViewModel: ObservableObject {
         } else {
           // End whole session
           self.state = .notStarted
-          self.saveToCoreData()
+          self.saveToCoreData(isSessionCancelled: false)
           self.animationDuration = 0
           
           self.animationDuration = self.workTime
@@ -103,8 +105,6 @@ final class MainViewModel: ObservableObject {
   func stopWorkSession() {
     countdownTimer?.invalidate()
     state = .stopped
-    progressValue = 1.0
-    animationDuration = workTime
   }
   
   func saveSession() {
@@ -136,8 +136,8 @@ final class MainViewModel: ObservableObject {
     }
   }
   
-  internal func saveToCoreData() {
-    storageManager.saveToCoreData(isSessionCanceled: false)
+  internal func saveToCoreData(isSessionCancelled canceled: Bool) {
+    storageManager.saveToCoreData(isSessionCanceled: canceled)
   }
   
   internal func setWorkTime() {

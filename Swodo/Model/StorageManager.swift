@@ -141,7 +141,8 @@ extension StorageManager {
 extension StorageManager {
   func saveToCoreData(isSessionCanceled canceled: Bool) {
     guard let workIntervals = delegate?.numberOfWorkIntervals,
-      let singleWorkDuration = delegate?.singleWorkDuration else {
+      let singleWorkDuration = delegate?.singleWorkDuration,
+      let breakDuration = delegate?.breakDuration else {
         return
     }
     
@@ -160,7 +161,7 @@ extension StorageManager {
     session.endDate = Date()
     session.id = UUID()
     session.numberOfWorkIntervals = workIntervals
-    session.singleBreakDuration = 5
+    session.singleBreakDuration = breakDuration
     session.startDate = delegate.startSessionDate
     session.totalWorkDuration = totalWork
     session.singleWorkDuration = singleWorkDuration

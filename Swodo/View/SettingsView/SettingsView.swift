@@ -17,12 +17,18 @@ struct SettingsView: View {
         Form {
           Section(header: Text("General")) {
             NavigationLink(destination: ThemeView(changeColorHandler: self.settings.changeTheme(to:),
-                                                  sampleView: AnyView(ActionButton()), offset: -(geo.size.height / 18))) {
+                                                  sampleView: ActionButton(enabled: true,
+                                                                           title: "Test button",
+                                                                           action: {}),
+                                                  offset: -(geo.size.height / 18))) {
                                                     Text("App theme")
             }
             
             NavigationLink(destination: ThemeView(changeColorHandler: self.settings.changeRingTheme(to:),
-                                                  sampleView: AnyView(RingView(height: geo.size.height)),
+                                                  sampleView: RingView(progressValue: .constant(1.0),
+                                                                       time: .constant("60:00"),
+                                                                       title: .constant("Test"),
+                                                                       height: geo.size.height),
                                                   offset: -(geo.size.height / 1))) {
                                                     Text("Progress ring theme")
             }
