@@ -30,12 +30,20 @@ final class Settings: ObservableObject {
     }
   }
   
+  @Published var historyEnabled: Bool {
+    didSet {
+      UserDefaults.standard.set(historyEnabled, forKey: "historyEnabled")
+    }
+  }
+  
   init() {
     theme = ColorLiteral(rawValue: UserDefaults.standard.string(forKey: "theme") ??
       ColorLiteral.blue.rawValue)!
     
     ringTheme = ColorLiteral(rawValue: UserDefaults.standard.string(forKey: "ringTheme") ??
     ColorLiteral.red.rawValue)!
+    
+    historyEnabled = UserDefaults.standard.bool(forKey: "historyEnabled")
   }
 }
 

@@ -137,6 +137,9 @@ final class MainViewModel: ObservableObject {
   }
   
   internal func saveToCoreData(isSessionCancelled canceled: Bool) {
+    if canceled {
+      numberOfWorkIntervals = numberOfWorkIntervals! - Int16(numberOfSessions)
+    }
     storageManager.saveToCoreData(isSessionCanceled: canceled)
   }
   

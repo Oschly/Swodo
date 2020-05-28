@@ -74,7 +74,7 @@ struct SelectionView: View {
               self.viewModel.setupContext(self.moc)
               self.viewModel.startSessionDate = Date()
               self.viewModel.numberOfWorkIntervals = Int16(self.viewModel.numberOfSessions)
-              self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime)
+              self.viewModel.singleWorkDuration = Int16(self.viewModel.workTime / 60)
               self.viewModel.progressValue = 1.0
               self.viewModel.breakDuration = self.settings.breakDuration
               self.viewModel.animationDuration = self.viewModel.workTime

@@ -20,7 +20,7 @@ protocol StorageManagerDelegate: ProgressDataDelegate {
 final class StorageManager {
   
   // Queues for saving and removing data.
-  private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .userInteractive)
+  private let userDefaultsQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsTask", qos: .userInitiated)
   private let userDefaultsBackgroundQueue = DispatchQueue(label: "com.oschly.swodo.userDefaultsBackgroundTask", qos: .background)
   private let userDefaults = UserDefaults.standard
   
@@ -93,7 +93,7 @@ extension StorageManager {
       // Calculate present session's state based on data of last exit and present launch
       while differenceBetweenDates > delegate.workTime {
         
-        // If differeneceBetweenDates is bigger than workTime and numberOfSessions equals 1,
+        // If differenceBetweenDates is bigger than workTime and numberOfSessions equals 1,
         // there is no need to continue the loop, just set session as ended.
         if delegate.numberOfSessions == 1 {
           delegate.state = .notStarted

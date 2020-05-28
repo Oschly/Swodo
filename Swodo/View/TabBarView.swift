@@ -18,7 +18,7 @@ struct TabBarView: View {
     // what's not related with timer itself and OS's elements
     if mainViewModel.state == .workTime ||
       mainViewModel.state == .breakTime ||
-    mainViewModel.state == .stopped {
+      mainViewModel.state == .stopped {
       return AnyView(
         FocusView()
           
@@ -46,13 +46,15 @@ struct TabBarView: View {
           }
       }
       
-      HistoryView()
-        .tabItem {
-          VStack {
-            Text("Statistics")
-            Image(systemName: "chart.bar")
-              .font(.system(size: 23))
-          }
+      if settings.historyEnabled {
+        HistoryView()
+          .tabItem {
+            VStack {
+              Text("History")
+              Image(systemName: "chart.bar")
+                .font(.system(size: 23))
+            }
+        }
       }
       
       SettingsView()
@@ -61,7 +63,7 @@ struct TabBarView: View {
             Text("Settings")
             Image(systemName: "gear")
               .font(.system(size: 23))
-
+            
           }
       }
     }

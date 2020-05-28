@@ -32,7 +32,9 @@ struct SettingsView: View {
                                                   offset: -(geo.size.height / 1))) {
                                                     Text("Progress ring theme")
             }
-            
+           
+
+              Toggle("History", isOn: self.$settings.historyEnabled)
           }
         }
         .navigationBarTitle("Settings")
