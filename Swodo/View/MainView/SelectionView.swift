@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct SelectionView: View {
   @EnvironmentObject var viewModel: MainViewModel
@@ -24,11 +25,6 @@ struct SelectionView: View {
     NavigationView {
       GeometryReader { geometry in
         VStack {
-          // View's bounds are merged together so it
-          // looks like these two pickers are single view
-          //
-          // TODO: - Make these views as custom structs with separated
-          // code from that struct
           HStack(spacing: 0) {
             VStack {
               Picker(selection: self.$viewModel.workTime, label: Text("")) {
@@ -79,6 +75,53 @@ struct SelectionView: View {
               self.viewModel.breakDuration = self.settings.breakDuration
               self.viewModel.animationDuration = self.viewModel.workTime
               self.viewModel.startWorkCycle()
+              
+              let numOfSessions = self.viewModel.numberOfSessions
+              
+              if numOfSessions > 1 {
+                let breakContent = UNMutableNotificationContent()
+                breakContent.title = "Break time!"
+                breakContent.sound = .default
+                
+                let workContent = UNMutableNotificationContent()
+                workContent.title = "It's time to work!"
+                workContent.sound = .default
+                
+                // Add notification after every work and break interval.
+                for i in 1..<numOfSessions {
+                  let breakIntervalIteration = i - 1
+                  let workTimeInterval = Double(i * Int(self.viewModel.workTime))
+                  let breakTimeInterval = Double(breakIntervalIteration * Int(self.viewModel.breakDuration!))
+                  
+                  let trigger = UNTimeIntervalNotificationTrigger(timeInterval: workTimeInterval + breakTimeInterval, repeats: false)
+                  let request = UNNotificationRequest(identifier: UUID().uuidString, content: breakContent, trigger: trigger)
+                  
+                  UNUserNotificationCenter.current().add(request)
+                  
+                  if i != self.viewModel.numberOfSessions {
+                    let nextBreakInterval = Double(i * Int(self.viewModel.breakDuration!)) * 60
+                    
+                    let breakTrigger = UNTimeIntervalNotificationTrigger(timeInterval: workTimeInterval + nextBreakInterval, repeats: false)
+                    let breakRequest = UNNotificationRequest(identifier: UUID().uuidString, content: workContent, trigger: breakTrigger)
+                    
+                    UNUserNotificationCenter.current().add(breakRequest)
+                  }
+                }
+              }
+              
+              // Add notification on the end of the session
+              let endSessionContent = UNMutableNotificationContent()
+              endSessionContent.title = "You have just finished your session!"
+              endSessionContent.sound = .default
+              
+              let allWorkIntervalsDuration = numOfSessions * Int(self.viewModel.workTime)
+              let allBreakIntervalsDuration = (numOfSessions - 1) * Int(self.settings.breakDuration) * 60
+              let wholeSessionDuration = Double(allWorkIntervalsDuration + allBreakIntervalsDuration)
+              
+              let trigger = UNTimeIntervalNotificationTrigger(timeInterval: wholeSessionDuration, repeats: false)
+              let request = UNNotificationRequest(identifier: UUID().uuidString, content: endSessionContent, trigger: trigger)
+              UNUserNotificationCenter.current().add(request)
+              
             }
             .disabled(self.viewModel.sessionTitle.isEmpty)
             
@@ -95,6 +138,15 @@ struct SelectionView: View {
     .navigationViewStyle(StackNavigationViewStyle())
     .onTapGesture {
       UIApplication.shared.endEditing()
+    }
+    .onAppear {
+      UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+          if success {
+              print("All set!")
+          } else if let error = error {
+              print(error.localizedDescription)
+          }
+      }
     }
   }
 }

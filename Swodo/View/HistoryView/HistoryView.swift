@@ -19,8 +19,7 @@ struct HistoryView: View {
         CellView(session: session)
           .frame(height: 100)
       }
-      .buttonStyle(PlainButtonStyle())
-      .navigationBarTitle("Statistics")
+      .navigationBarTitle("History")
     }
     .navigationViewStyle(StackNavigationViewStyle())
   }

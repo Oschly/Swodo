@@ -37,6 +37,7 @@ struct CellView: View {
   }
   
   var body: some View {
+    NavigationLink(destination: DetailView(session: session)) {
       VStack {
         HStack {
           Text(self.session.title)
@@ -55,13 +56,7 @@ struct CellView: View {
           Text(self.formattedNumberOfIntervals)
             .offset(x: 0, y: -10)
         }
-        
       }
-      .sheet(isPresented: self.$presentingDetails, content: {
-        DetailView(session: self.session)
-      })
-      .onTapGesture {
-        self.presentingDetails = true
     }
   }
 }

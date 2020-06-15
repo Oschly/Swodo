@@ -58,9 +58,9 @@ struct RingView: View {
     self._title = .constant("Choosing awesome theme.")
     self.height = height
   }
-  #warning("This view is bugged if first time is loaded portrait view")
 }
 
+#if DEBUG
 struct RingView_Previews: PreviewProvider {
   static var previews: some View {
     RingView(progressValue: .constant(20),
@@ -71,22 +71,4 @@ struct RingView_Previews: PreviewProvider {
       .previewDevice("iPhone Xr")
   }
 }
-
-struct Hidden: ViewModifier {
-  let bool: Bool
-  
-  func body(content: Content) -> some View {
-    if bool {
-      return AnyView(content.hidden())
-    } else {
-      return AnyView(content)
-    }
-  }
-}
-
-extension View {
-  func hidden(_ hidden: Bool) -> some View {
-    return self
-      .modifier(Hidden(bool: hidden))
-  }
-}
+#endif

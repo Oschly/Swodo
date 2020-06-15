@@ -10,6 +10,8 @@ import SwiftUI
 import UIKit
 
 final class Settings: ObservableObject {
+  static let shared = Settings()
+  
   @Published var theme: ColorLiteral {
     didSet {
       UserDefaults.standard.set(theme.rawValue, forKey: "theme")
@@ -33,6 +35,9 @@ final class Settings: ObservableObject {
   @Published var historyEnabled: Bool {
     didSet {
       UserDefaults.standard.set(historyEnabled, forKey: "historyEnabled")
+      if !historyEnabled {
+        NotificationCenter.default.post(name: .init("ClearData"), object: nil)
+      }
     }
   }
   

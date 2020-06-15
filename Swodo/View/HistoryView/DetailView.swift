@@ -20,7 +20,6 @@ struct DetailView: View {
   }
   
   var body: some View {
-    NavigationView {
       Form {
         Section(header: Text("General")) {
           SimpleCell(title: "Title", value: session.title)
@@ -38,10 +37,8 @@ struct DetailView: View {
           SimpleCell(title: "Interval duration", value: String(session.singleWorkDuration) + " minutes")
           SimpleCell(title: "Break duration", value: String(session.singleBreakDuration) + " minutes")
         }
-      }
       .navigationBarTitle("Session")
     }
-    .navigationViewStyle(DefaultNavigationViewStyle())
   }
 }
 

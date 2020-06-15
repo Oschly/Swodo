@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 import CoreData
-import Combine
+import UIKit
 
 #warning("Add somewhere notification that when device orientation changes, selection view refreshes")
 final class MainViewModel: ObservableObject {
@@ -23,7 +23,7 @@ final class MainViewModel: ObservableObject {
   
   @Published var sessionTitle = String()
   
-  @Published var numberOfSessions = 1
+  @Published var numberOfSessions: Int
   
   @Published var state: TimerState
   
@@ -40,9 +40,10 @@ final class MainViewModel: ObservableObject {
   var singleWorkDuration: Int16?
   
   var breakDuration: Int16?
-  
+    
   init() {
     state = TimerState(rawValue: UserDefaults.standard.string(forKey: .stateKey) ?? TimerState.notStarted.rawValue)!
+    numberOfSessions = 1
     storageManager.delegate = self
   }
   
@@ -55,23 +56,32 @@ final class MainViewModel: ObservableObject {
       guard let self = self else { return }
       
       guard self.animationDuration > 0 else {
+        let impact = UIImpactFeedbackGenerator(style: .heavy)
+        impact.impactOccurred(intensity: 100)
+        
         self.countdownTimer?.invalidate()
         self.animationDuration = 1.0
         self.numberOfSessions -= 1
         
         if self.numberOfSessions > 0 {
           // Start break cycle
+          
           self.animationDuration = 0
           self.startBreakCycle()
         } else {
           // End whole session
+          let impact = UIImpactFeedbackGenerator(style: .heavy)
+          impact.impactOccurred(intensity: 100)
+          
           self.state = .notStarted
-          self.saveToCoreData(isSessionCancelled: false)
+          if Settings.shared.historyEnabled {
+            self.saveToCoreData(isSessionCancelled: false)
+          }
           self.animationDuration = 0
           
           self.animationDuration = self.workTime
           self.numberOfSessions = Int(self.numberOfWorkIntervals ?? 1)
-          self.numberOfWorkIntervals = nil
+          
         }
         return
         
@@ -89,7 +99,11 @@ final class MainViewModel: ObservableObject {
       
       guard self.animationDuration < self.workTime else {
         self.countdownTimer?.invalidate()
+        
+        let impact = UIImpactFeedbackGenerator(style: .heavy)
+        impact.impactOccurred(intensity: 100)
         self.startWorkCycle()
+        
         return
       }
       
@@ -121,12 +135,12 @@ final class MainViewModel: ObservableObject {
     countdownTimer?.invalidate()
     
     switch state {
-      case .workTime:
-        startWorkCycle()
-      case .breakTime:
-        startBreakCycle()
-      default:
-        break
+    case .workTime:
+      startWorkCycle()
+    case .breakTime:
+      startBreakCycle()
+    default:
+      break
     }
   }
   
@@ -141,6 +155,7 @@ final class MainViewModel: ObservableObject {
       numberOfWorkIntervals = numberOfWorkIntervals! - Int16(numberOfSessions)
     }
     storageManager.saveToCoreData(isSessionCanceled: canceled)
+    self.numberOfWorkIntervals = 1
   }
   
   internal func setWorkTime() {

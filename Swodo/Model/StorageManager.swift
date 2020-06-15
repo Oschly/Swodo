@@ -9,6 +9,7 @@
 import Foundation
 import CoreGraphics
 import CoreData
+import SwiftUI
 
 // I didn't find any other way to request given for SwiftUI
 // views Core Data's context. It allows to operate on same context
@@ -173,6 +174,19 @@ extension StorageManager {
     } catch {
       // TODO: - Some nice Error handling here
       print(error)
+    }
+  }
+  
+  @objc
+  func clearCoreDataEntries() {
+    let fetch = NSFetchRequest<NSManagedObject>(entityName: "Session")
+    
+    if let result = try! delegate?.context?.fetch(fetch) {
+      print("Yieee!")
+      for object in result {
+        delegate?.context?.delete(object)
+      }
+      try! delegate?.context?.save()
     }
   }
 }

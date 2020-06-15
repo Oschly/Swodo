@@ -12,7 +12,7 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
   
-  var settings = Settings()
+  var settings = Settings.shared
   var mainViewModel = MainViewModel()
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

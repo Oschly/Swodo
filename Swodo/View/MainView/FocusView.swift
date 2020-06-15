@@ -44,13 +44,15 @@ struct FocusView: View {
     .alert(isPresented: $showCancelAlert) { () -> Alert in
       Alert(title: Text("Are You sure?"),
             primaryButton: .destructive(Text("Cancel")) {
-                  self.viewModel.saveToCoreData(isSessionCancelled: true)
-                  self.viewModel.state = .notStarted
-            },
+              if Settings.shared.historyEnabled {
+                self.viewModel.saveToCoreData(isSessionCancelled: true)
+              }
+              self.viewModel.state = .notStarted
+        },
             secondaryButton: .cancel(Text("Keep running")) {
-                  self.viewModel.startWorkCycle()
-            })
-  }
+              self.viewModel.startWorkCycle()
+        })
+    }
   }
 }
 
